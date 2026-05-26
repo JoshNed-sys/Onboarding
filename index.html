@@ -3,186 +3,1204 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ned — Customer Intake Form</title>
+<title>Ned — Customer Intake</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f4f0; padding: 40px 20px 80px; }
-  .page { max-width: 680px; margin: 0 auto; }
-  .header { margin-bottom: 36px; }
-  .header-logo { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
-  .header-sub { font-size: 13px; color: #666; }
-  .section { background: #fff; border: 1px solid #e5e3de; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
-  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 18px; }
-  .row { display: grid; gap: 12px; margin-bottom: 14px; }
-  .row-2 { grid-template-columns: 1fr 1fr; }
-  .row-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .field { display: flex; flex-direction: column; gap: 5px; }
-  label { font-size: 12px; font-weight: 500; color: #555; }
-  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea { width: 100%; padding: 8px 10px; font-size: 13px; font-family: inherit; color: #1a1a1a; background: #fff; border: 1px solid #d8d5cf; border-radius: 6px; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
-  input:focus, select:focus, textarea:focus { border-color: #1a1a1a; }
-  textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
-  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-  .checkgroup { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 4px; }
-  .checkgroup.col-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .check-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #333; cursor: pointer; }
-  .check-item input[type="checkbox"], .check-item input[type="radio"] { width: 15px; height: 15px; min-width: 15px; accent-color: #1a1a1a; cursor: pointer; border: none; padding: 0; }
-  .track-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .track-option { border: 1.5px solid #e5e3de; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
-  .track-option:has(input:checked) { border-color: #1a1a1a; background: #fafaf9; }
-  .track-option input[type="radio"] { display: none; }
-  .track-name { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
-  .track-desc { font-size: 12px; color: #777; line-height: 1.4; }
-  .divider { border: none; border-top: 1px solid #f0ede8; margin: 18px 0; }
-  .field-label { font-size: 13px; font-weight: 500; color: #333; margin-bottom: 8px; display: block; }
-  .submit-row { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
-  .submit-note { font-size: 12px; color: #888; }
-  .btn-submit { background: #1a1a1a; color: #fff; border: none; padding: 10px 24px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; }
-  .btn-submit:hover { background: #333; }
-  @media (max-width: 540px) {
-    .row-2, .row-3, .track-selector, .checkgroup, .checkgroup.col-3 { grid-template-columns: 1fr; }
-    .submit-row { flex-direction: column; gap: 12px; align-items: flex-start; }
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f4f0; padding: 32px 20px 80px; }
+.page { max-width: 720px; margin: 0 auto; }
+
+/* Header */
+.header { margin-bottom: 28px; }
+.header-logo { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.header-sub { font-size: 13px; color: #666; line-height: 1.5; }
+
+/* Progress */
+.progress-wrap { margin-bottom: 28px; }
+.progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 8px; }
+.progress-bar { height: 4px; background: #e5e3de; border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: #1a1a1a; border-radius: 99px; transition: width 0.3s; }
+
+/* Step */
+.step { display: none; }
+.step.active { display: block; }
+.step-title { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+.step-desc { font-size: 13px; color: #666; margin-bottom: 24px; line-height: 1.5; }
+
+/* Sections */
+.section { background: #fff; border: 1px solid #e5e3de; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+.section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #999; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0ede8; }
+.section-note { font-size: 12px; color: #888; margin-bottom: 16px; line-height: 1.5; font-style: italic; }
+
+/* Fields */
+.row { display: grid; gap: 12px; margin-bottom: 14px; }
+.row-2 { grid-template-columns: 1fr 1fr; }
+.row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field:last-child { margin-bottom: 0; }
+.field-mb { margin-bottom: 14px; }
+label.field-label { font-size: 12px; font-weight: 500; color: #555; }
+.field-hint { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"],
+select, textarea {
+  width: 100%; padding: 8px 10px; font-size: 13px; font-family: inherit;
+  color: #1a1a1a; background: #fff; border: 1px solid #d8d5cf;
+  border-radius: 6px; outline: none; transition: border-color 0.15s; -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus { border-color: #1a1a1a; }
+textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+
+/* Checkboxes / radios */
+.check-group { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 16px; }
+.check-group.col-1 { grid-template-columns: 1fr; }
+.check-group.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+.check-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; cursor: pointer; line-height: 1.4; }
+.check-item input { margin-top: 2px; min-width: 14px; width: 14px; height: 14px; accent-color: #1a1a1a; cursor: pointer; flex-shrink: 0; }
+.check-item-desc { font-size: 11px; color: #888; margin-top: 2px; }
+
+/* Track selector */
+.track-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+.track-option { border: 1.5px solid #e5e3de; border-radius: 8px; padding: 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.track-option:has(input:checked) { border-color: #1a1a1a; background: #fafaf9; }
+.track-option input[type="radio"] { display: none; }
+.track-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+.track-product { font-size: 11px; color: #888; font-style: italic; margin-bottom: 4px; }
+.track-desc { font-size: 12px; color: #777; line-height: 1.4; }
+
+/* Divider */
+.divider { border: none; border-top: 1px solid #f0ede8; margin: 18px 0; }
+
+/* Table for team structure / systems */
+.form-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 4px; }
+.form-table th { text-align: left; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 8px 8px 0; border-bottom: 1px solid #e5e3de; }
+.form-table td { padding: 8px 8px 8px 0; border-bottom: 1px solid #f5f3ef; vertical-align: top; }
+.form-table tr:last-child td { border-bottom: none; }
+.form-table input, .form-table select { padding: 6px 8px; font-size: 12px; }
+.form-table .yn { display: flex; gap: 12px; }
+.form-table .yn label { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; font-weight: 400; color: #333; }
+.form-table .yn input { width: 13px; height: 13px; margin: 0; }
+
+/* Priority matrix */
+.matrix-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.matrix-table th { text-align: center; font-size: 11px; font-weight: 600; color: #888; padding: 6px 4px; border-bottom: 1px solid #e5e3de; }
+.matrix-table th:first-child { text-align: left; }
+.matrix-table td { padding: 7px 4px; border-bottom: 1px solid #f5f3ef; text-align: center; font-size: 12px; color: #333; }
+.matrix-table td:first-child { text-align: left; padding-left: 0; }
+.matrix-table tr:last-child td { border-bottom: none; }
+.matrix-table input[type="radio"] { accent-color: #1a1a1a; cursor: pointer; }
+
+/* Navigation */
+.nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+.btn { padding: 10px 22px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.btn-back { background: transparent; border: 1px solid #d8d5cf; color: #555; }
+.btn-back:hover { background: #f5f3ef; }
+.btn-next { background: #1a1a1a; border: 1px solid #1a1a1a; color: #fff; }
+.btn-next:hover { background: #333; }
+.btn-submit { background: #1a1a1a; border: 1px solid #1a1a1a; color: #fff; }
+.btn-submit:hover { background: #333; }
+
+/* Thank you */
+#thanks { display: none; text-align: center; padding: 48px 24px; background: #fff; border: 1px solid #e5e3de; border-radius: 10px; }
+#thanks h2 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+#thanks p { font-size: 14px; color: #666; line-height: 1.6; }
+
+/* Track-conditional sections */
+.track-a-only, .track-b-only { display: none; }
+
+/* Responsive */
+@media (max-width: 560px) {
+  .row-2, .row-3, .row-4, .track-selector, .check-group, .check-group.col-3 { grid-template-columns: 1fr; }
+  .nav { flex-direction: column-reverse; gap: 10px; }
+  .btn { width: 100%; text-align: center; }
+}
 </style>
 </head>
 <body>
 <div class="page">
+
   <div class="header">
     <div class="header-logo">⚡ Ned — Customer Intake</div>
-    <div class="header-sub">Review, correct anything pre-filled, and complete open sections. Return to <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a;">camille@nedhelps.com</a> within 5 business days.</div>
+    <div class="header-sub">We've pre-filled everything we already know from our conversations. Please review, correct anything that's off, and complete the open sections. Return to <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a;">camille@nedhelps.com</a> within 5 business days. Questions? Reach Camille directly.</div>
   </div>
 
-  <form action="https://formspree.io/f/mqejgbqz" method="POST">
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="step-label">Step 1 of 9</span>
+      <span id="step-name-label">Your Organization</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:11%"></div></div>
+  </div>
+
+  <form id="intake-form" action="https://formspree.io/f/mqejgbqz" method="POST">
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 1 — Organization + Track
+  ══════════════════════════════════════════════════ -->
+  <div class="step active" id="step-1">
+    <div class="step-title">Your Organization</div>
+    <div class="step-desc">Most of this should be pre-filled. Please confirm or correct.</div>
 
     <div class="section">
-      <div class="section-title">1 · Your Organization</div>
-      <div class="row row-2">
-        <div class="field"><label for="org-name">Organization name (+ DBA if any)</label><input type="text" id="org-name" name="org_name" placeholder="Acme Lending LLC" /></div>
-        <div class="field"><label for="org-ein">EIN / Tax ID</label><input type="text" id="org-ein" name="ein" placeholder="12-3456789" /></div>
+      <div class="section-title">Organization</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Organization name (and DBA, if any)</label><input type="text" name="org_name" placeholder="Acme Lending LLC" /></div>
+        <div class="field"><label class="field-label">Organization EIN / Tax ID</label><input type="text" name="ein" placeholder="12-3456789" /></div>
       </div>
-      <div class="row row-3">
-        <div class="field"><label for="contact-name">Primary contact — name &amp; title</label><input type="text" id="contact-name" name="contact_name" placeholder="Jane Smith, VP Lending" /></div>
-        <div class="field"><label for="contact-email">Email</label><input type="email" id="contact-email" name="email" placeholder="jane@example.org" /></div>
-        <div class="field"><label for="contact-phone">Phone</label><input type="tel" id="contact-phone" name="phone" placeholder="(555) 000-0000" /></div>
-      </div>
-      <div class="row row-2">
-        <div class="field"><label for="org-location">City, State</label><input type="text" id="org-location" name="location" placeholder="Chicago, IL" /></div>
-        <div class="field"><label for="billing-contact">Billing contact (if different)</label><input type="text" id="billing-contact" name="billing_contact" placeholder="Name / email" /></div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Organization address (City, State)</label><input type="text" name="location" placeholder="Chicago, IL" /></div>
+        <div class="field"><label class="field-label">Billing / Invoicing contact (if different)</label><input type="text" name="billing_contact" placeholder="Name / email" /></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-title">2 · Product Track</div>
+      <div class="section-title">Primary Onboarding Contact</div>
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Name &amp; title</label><input type="text" name="contact_name" placeholder="Jane Smith, VP Lending" /></div>
+        <div class="field"><label class="field-label">Email</label><input type="email" name="email" placeholder="jane@lender.org" /></div>
+        <div class="field"><label class="field-label">Phone</label><input type="tel" name="phone" placeholder="(555) 000-0000" /></div>
+      </div>
+      <div class="row row-2">
+        <div class="field"><label class="field-label">Executive sponsor (if different from above)</label><input type="text" name="exec_sponsor" placeholder="Name / title" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Select Your Track</div>
+      <div class="section-note">Choose the track that matches your Ned engagement. Your answers on the following pages will adapt accordingly.</div>
       <div class="track-selector">
-        <label class="track-option"><input type="radio" name="track" value="spotlight" checked /><div class="track-name">Track A — Spotlight</div><div class="track-desc">Borrower pre-qualification and / or portfolio monitoring</div></label>
-        <label class="track-option"><input type="radio" name="track" value="full" /><div class="track-name">Track B — Full Platform</div><div class="track-desc">Source, Flow, and Pulse — full lending platform implementation</div></label>
-      </div>
-      <hr class="divider" />
-      <span class="field-label">Primary use case (select all that apply)</span>
-      <div class="checkgroup">
-        <label class="check-item"><input type="checkbox" name="use_case" value="Pre-qualifying new applicants" /> Pre-qualifying new applicants</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Monitoring existing borrowers" /> Monitoring existing borrowers</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Risk / early warning on portfolio" /> Risk / early warning on portfolio</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Replacing a manual review process" /> Replacing a manual review process</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Reduce time to approve / close" /> Reduce time to approve / close</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Launch a new loan product" /> Launch a new loan product</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Expand to new borrowers / geographies" /> Expand to new borrowers / geographies</label>
-        <label class="check-item"><input type="checkbox" name="use_case" value="Better portfolio visibility" /> Better portfolio visibility</label>
-      </div>
-      <hr class="divider" />
-      <div class="row row-2">
-        <div class="field"><label for="go-live">Target go-live date</label><input type="date" id="go-live" name="go_live" /></div>
-        <div class="field"><label for="ned-scope">Is Ned replacing or complementing existing systems?</label><select id="ned-scope" name="ned_scope"><option value="">Select...</option><option>Replacing</option><option>Complementing</option><option>Both</option></select></div>
+        <label class="track-option">
+          <input type="radio" name="track" value="Track A — Spotlight" onchange="setTrack('a')" />
+          <div class="track-name">Track A — Spotlight</div>
+          <div class="track-product">Ned Spotlight</div>
+          <div class="track-desc">Borrower pre-qualification and / or ongoing monitoring of your existing portfolio.</div>
+        </label>
+        <label class="track-option">
+          <input type="radio" name="track" value="Track B — Full Implementation" onchange="setTrack('b')" />
+          <div class="track-name">Track B — Full Implementation</div>
+          <div class="track-product">Source / Flow / Pulse</div>
+          <div class="track-desc">Ned's full lending platform — origination, underwriting, servicing, and monitoring.</div>
+        </label>
       </div>
     </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 2 — Lending Operation
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-2">
+    <div class="step-title">Your Lending Operation</div>
+    <div class="step-desc">We want to understand how you operate today so we can configure Ned to fit your team — not the other way around.</div>
 
     <div class="section">
-      <div class="section-title">3 · Your Lending Operation</div>
-      <span class="field-label">Loan types offered (select all that apply)</span>
-      <div class="checkgroup col-3" style="margin-bottom:16px;">
+      <div class="section-title">Loan Types</div>
+      <div class="section-note">What types of loans does your organization offer? (select all that apply)</div>
+      <div class="check-group col-3">
         <label class="check-item"><input type="checkbox" name="loan_types" value="Term loans" /> Term loans</label>
-        <label class="check-item"><input type="checkbox" name="loan_types" value="Lines of credit" /> Lines of credit</label>
         <label class="check-item"><input type="checkbox" name="loan_types" value="Revenue-based / MCA" /> Revenue-based / MCA</label>
+        <label class="check-item"><input type="checkbox" name="loan_types" value="Lines of credit" /> Lines of credit</label>
         <label class="check-item"><input type="checkbox" name="loan_types" value="Microloans" /> Microloans</label>
-        <label class="check-item"><input type="checkbox" name="loan_types" value="SBA-backed" /> SBA-backed</label>
+        <label class="check-item"><input type="checkbox" name="loan_types" value="SBA-backed products" /> SBA-backed products</label>
         <label class="check-item"><input type="checkbox" name="loan_types" value="Construction / real estate" /> Construction / real estate</label>
       </div>
-      <div class="field" style="margin-bottom:14px;"><label for="borrower-profile">Typical borrowers</label><input type="text" id="borrower-profile" name="borrower_profile" placeholder="e.g. small businesses in food & beverage, 2–5 years old, $100K–$500K revenue" /></div>
-      <div class="row row-3">
-        <div class="field"><label for="book-dollars">Loan book — total outstanding</label><input type="text" id="book-dollars" name="book_dollars" placeholder="$0,000,000" /></div>
-        <div class="field"><label for="book-borrowers">Active borrowers</label><input type="number" id="book-borrowers" name="active_borrowers" placeholder="0" min="0" /></div>
-        <div class="field"><label for="geography">Geographic footprint</label><input type="text" id="geography" name="geography" placeholder="e.g. IL, TX, Nationwide" /></div>
-      </div>
-      <div class="field" style="margin-bottom:14px;"><label for="current-systems">Current systems (LOS, CRM, servicing, etc.)</label><input type="text" id="current-systems" name="current_systems" placeholder="e.g. Salesforce, Fundingo, Excel" /></div>
-      <div class="field"><label for="challenges">Top 1–2 operational challenges right now</label><textarea id="challenges" name="challenges" placeholder="e.g. Manual underwriting takes too long, hard to monitor portfolio health…"></textarea></div>
+      <div style="margin-top:10px;"><input type="text" name="loan_types_other" placeholder="Other: _______________" style="max-width:300px;" /></div>
     </div>
 
     <div class="section">
-      <div class="section-title">4 · Loan Program Configuration</div>
-      <div style="margin-bottom:14px; font-size:12px; color:#666;">Complete one entry per program. Add additional sheets for multiple programs.</div>
-      <div class="row row-2">
-        <div class="field"><label for="program-name">Program name (as borrowers see it)</label><input type="text" id="program-name" name="program_name" placeholder="Working Capital Loan" /></div>
-        <div class="field"><label for="program-type">Loan type</label><select id="program-type" name="program_type"><option value="">Select...</option><option>Term loan</option><option>Revenue-based repayment</option><option>Line of credit</option><option>Other</option></select></div>
+      <div class="section-title">Your Borrowers &amp; Loan Book</div>
+      <div class="field field-mb">
+        <label class="field-label">Who are your typical borrowers?</label>
+        <div class="field-hint">e.g. "small businesses in food &amp; beverage, 2–5 years old, $100K–$500K annual revenue"</div>
+        <textarea name="borrower_profile" placeholder="Describe your typical borrower…"></textarea>
       </div>
-      <div class="row row-2">
-        <div class="field"><label for="loan-min">Loan amount — minimum</label><input type="text" id="loan-min" name="loan_min" placeholder="$5,000" /></div>
-        <div class="field"><label for="loan-max">Loan amount — maximum</label><input type="text" id="loan-max" name="loan_max" placeholder="$150,000" /></div>
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Approximate total dollar amount outstanding</label><input type="text" name="book_dollars" placeholder="$0,000,000" /></div>
+        <div class="field"><label class="field-label">Approximate number of active borrowers</label><input type="number" name="active_borrowers" placeholder="0" min="0" /></div>
+        <div class="field"><label class="field-label">Geographic footprint (states / regions)</label><input type="text" name="geography" placeholder="e.g. IL, TX, Nationwide" /></div>
       </div>
-      <div class="row row-3">
-        <div class="field"><label for="term-min">Term — min (months)</label><input type="number" id="term-min" name="term_min" placeholder="6" min="1" /></div>
-        <div class="field"><label for="term-max">Term — max (months)</label><input type="number" id="term-max" name="term_max" placeholder="36" min="1" /></div>
-        <div class="field"><label for="repay-freq">Repayment frequency</label><select id="repay-freq" name="repay_freq"><option value="">Select...</option><option>Weekly</option><option>Bi-weekly</option><option>Monthly</option><option>Revenue-based</option></select></div>
+    </div>
+
+    <div class="section track-b-only" id="s2-team">
+      <div class="section-title">Lending Team Structure</div>
+      <div class="section-note">Do you have a dedicated person or team for each function? (Track B)</div>
+      <table class="form-table">
+        <thead><tr><th style="width:200px;">Function</th><th style="width:80px;">Y / N</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Loan origination / intake</td><td><div class="yn"><label><input type="radio" name="team_origination" value="Y" />Y</label><label><input type="radio" name="team_origination" value="N" />N</label></div></td><td><input type="text" name="team_origination_notes" placeholder="Notes…" /></td></tr>
+          <tr><td>Underwriting</td><td><div class="yn"><label><input type="radio" name="team_underwriting" value="Y" />Y</label><label><input type="radio" name="team_underwriting" value="N" />N</label></div></td><td><input type="text" name="team_underwriting_notes" placeholder="Notes…" /></td></tr>
+          <tr><td>Closing &amp; disbursement</td><td><div class="yn"><label><input type="radio" name="team_closing" value="Y" />Y</label><label><input type="radio" name="team_closing" value="N" />N</label></div></td><td><input type="text" name="team_closing_notes" placeholder="Notes…" /></td></tr>
+          <tr><td>Loan servicing</td><td><div class="yn"><label><input type="radio" name="team_servicing" value="Y" />Y</label><label><input type="radio" name="team_servicing" value="N" />N</label></div></td><td><input type="text" name="team_servicing_notes" placeholder="Notes…" /></td></tr>
+          <tr><td>Portfolio monitoring</td><td><div class="yn"><label><input type="radio" name="team_monitoring" value="Y" />Y</label><label><input type="radio" name="team_monitoring" value="N" />N</label></div></td><td><input type="text" name="team_monitoring_notes" placeholder="Notes…" /></td></tr>
+          <tr><td>Collections</td><td><div class="yn"><label><input type="radio" name="team_collections" value="Y" />Y</label><label><input type="radio" name="team_collections" value="N" />N</label></div></td><td><input type="text" name="team_collections_notes" placeholder="Notes…" /></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section track-b-only" id="s2-systems">
+      <div class="section-title">Current Systems</div>
+      <div class="section-note">What systems does your team currently use? Will Ned replace or complement each?</div>
+      <table class="form-table">
+        <thead><tr><th style="width:180px;">Function</th><th>Tool / Platform</th><th style="width:200px;">Replace or Complement?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan origination / LOS</td><td><input type="text" name="sys_los" placeholder="e.g. Salesforce, Fundingo…" /></td><td><select name="sys_los_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>Underwriting</td><td><input type="text" name="sys_underwriting" placeholder="" /></td><td><select name="sys_underwriting_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>Loan servicing</td><td><input type="text" name="sys_servicing" placeholder="" /></td><td><select name="sys_servicing_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>CRM</td><td><input type="text" name="sys_crm" placeholder="" /></td><td><select name="sys_crm_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>General ledger / accounting</td><td><input type="text" name="sys_gl" placeholder="" /></td><td><select name="sys_gl_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>Document management</td><td><input type="text" name="sys_docs" placeholder="" /></td><td><select name="sys_docs_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+          <tr><td>Business verification</td><td><input type="text" name="sys_verification" placeholder="" /></td><td><select name="sys_verification_role"><option value="">Select…</option><option>Replace</option><option>Complement</option><option>N/A</option></select></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section track-a-only" id="s2-systems-a">
+      <div class="section-title">Current Systems</div>
+      <div class="field"><label class="field-label">What system(s) does your team currently use for loan management or underwriting?</label>
+      <div class="field-hint">e.g. Salesforce, Fundingo, Excel, custom system</div>
+      <input type="text" name="current_systems_a" placeholder="List your current tools…" /></div>
+    </div>
+
+    <div class="section track-b-only" id="s2-ops">
+      <div class="section-title">Operations</div>
+      <div class="field field-mb">
+        <label class="field-label">How long does it typically take your team to approve a loan today, from application to decision?</label>
+        <input type="text" name="approval_time" placeholder="e.g. 3–5 business days" />
       </div>
-      <div class="row row-2">
-        <div class="field"><label for="rate">Interest rate (APR) or factor rate</label><input type="text" id="rate" name="rate" placeholder="e.g. 12% APR or 1.15x" /></div>
-        <div class="field"><label for="origination-fee">Origination / closing fee (if any)</label><input type="text" id="origination-fee" name="origination_fee" placeholder="e.g. 2% or $500, or None" /></div>
+      <div class="field">
+        <label class="field-label">What are your top 2–3 operational challenges in lending right now?</label>
+        <textarea name="challenges" placeholder="e.g. Manual underwriting takes too long, hard to monitor portfolio health, high delinquency rates…"></textarea>
+      </div>
+    </div>
+
+    <div class="section track-a-only" id="s2-ops-a">
+      <div class="section-title">Operations</div>
+      <div class="field">
+        <label class="field-label">What are your top 1–2 operational challenges in lending right now?</label>
+        <textarea name="challenges_a" placeholder="e.g. Manual underwriting takes too long, hard to monitor portfolio health…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 3 — Use Case & Goals
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-3">
+    <div class="step-title">Use Case &amp; Goals</div>
+
+    <!-- Track A -->
+    <div class="track-a-only">
+      <div class="section">
+        <div class="section-title">Your Spotlight Use Case</div>
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">What will you primarily use Spotlight for? (select all that apply)</div>
+          <div class="check-group col-1">
+            <label class="check-item"><input type="checkbox" name="spotlight_use" value="Pre-qualifying new loan applicants" /> Pre-qualifying new loan applicants</label>
+            <label class="check-item"><input type="checkbox" name="spotlight_use" value="Ongoing monitoring of existing borrowers" /> Ongoing monitoring of existing borrowers</label>
+            <label class="check-item"><input type="checkbox" name="spotlight_use" value="Risk management / early warning on portfolio" /> Risk management / early warning on portfolio</label>
+            <label class="check-item"><input type="checkbox" name="spotlight_use" value="Replacing a manual financial review process" /> Replacing a manual financial review process</label>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Are you starting with new applicants, existing borrowers, or both?</div>
+          <div class="check-group col-1">
+            <label class="check-item"><input type="radio" name="spotlight_starting" value="New applicants only" /> New applicants only</label>
+            <label class="check-item"><input type="radio" name="spotlight_starting" value="Existing borrowers only" /> Existing borrowers only</label>
+            <label class="check-item"><input type="radio" name="spotlight_starting" value="Both" /> Both</label>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">If monitoring existing borrowers — approximately how many do you want to onboard at launch?</label><input type="number" name="spotlight_borrower_count" placeholder="Number of borrowers" min="0" /></div>
+          <div class="field"><label class="field-label">Approximate total dollar value of those loans</label><input type="text" name="spotlight_loan_value" placeholder="$0,000,000" /></div>
+        </div>
+        <div class="field field-mb">
+          <label class="field-label">Do any of your borrowers bank at institutions that may not support Plaid connectivity (e.g., very small community banks or credit unions)?</label>
+          <div class="check-group col-1" style="margin-bottom:8px;">
+            <label class="check-item"><input type="radio" name="plaid_concern" value="No" /> No</label>
+            <label class="check-item"><input type="radio" name="plaid_concern" value="Yes — see notes" /> Yes — list what you know below</label>
+          </div>
+          <textarea name="plaid_concern_notes" placeholder="List institutions if known…" style="min-height:56px;"></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">What is your target date to have Spotlight live and in use?</label>
+          <input type="date" name="go_live_a" />
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Your Team</div>
+        <div class="field">
+          <label class="field-label">Who on your team will use Spotlight day-to-day?</label>
+          <div class="field-hint">Role titles are fine</div>
+          <input type="text" name="team_users_a" placeholder="e.g. Loan officers, underwriters, portfolio manager" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Track B -->
+    <div class="track-b-only">
+      <div class="section">
+        <div class="section-title">Goals with Ned</div>
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:4px;">Is Ned replacing existing systems, complementing them, or both?</div>
+          <div class="check-group col-1" style="margin-bottom:10px;">
+            <label class="check-item"><input type="radio" name="ned_scope" value="Replacing" /> Replacing</label>
+            <label class="check-item"><input type="radio" name="ned_scope" value="Complementing" /> Complementing</label>
+            <label class="check-item"><input type="radio" name="ned_scope" value="Both" /> Both</label>
+          </div>
+          <div class="row row-2">
+            <div class="field"><label class="field-label">Which systems? (if replacing)</label><input type="text" name="ned_replacing_which" placeholder="e.g. Fundingo, Excel" /></div>
+            <div class="field"><label class="field-label">Hard cutover date? (if replacing)</label><input type="date" name="ned_cutover_date" /></div>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">What percentage of your loan book do you plan to run on Ned in Year 1?</div>
+          <div class="check-group col-1">
+            <label class="check-item"><input type="radio" name="year1_book" value="Less than 25%" /> Less than 25%</label>
+            <label class="check-item"><input type="radio" name="year1_book" value="25–50%" /> 25–50%</label>
+            <label class="check-item"><input type="radio" name="year1_book" value="50–75%" /> 50–75%</label>
+            <label class="check-item"><input type="radio" name="year1_book" value="75–100%" /> 75–100%</label>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">In Year 1 using Ned, what does success look like for your team? (check all that apply)</div>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Reduce time to approve / close loans" /> Reduce time to approve / close loans</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Reduce manual servicing work" /> Reduce manual servicing work</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Improve repayment timeliness" /> Improve repayment timeliness</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Launch a new loan product" /> Launch a new loan product</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Expand to new borrower segments or geographies" /> Expand to new borrower segments or geographies</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Gain better portfolio visibility" /> Gain better portfolio visibility</label>
+            <label class="check-item"><input type="checkbox" name="success_metrics" value="Reduce delinquency / default rates" /> Reduce delinquency / default rates</label>
+          </div>
+          <input type="text" name="success_other" placeholder="Other: _______________" style="margin-top:8px;max-width:300px;" />
+        </div>
+        <div class="field">
+          <label class="field-label">What is your target go-live date?</label>
+          <input type="date" name="go_live_b" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">New vs. Existing Loan Products</div>
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Will Ned be used for a new loan product, an existing product, or both?</div>
+          <div class="check-group col-1">
+            <label class="check-item"><input type="radio" name="product_type" value="Existing product(s) only" /> Existing product(s) only</label>
+            <label class="check-item"><input type="radio" name="product_type" value="New product(s) only" /> New product(s) only</label>
+            <label class="check-item"><input type="radio" name="product_type" value="Both" /> Both</label>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div class="field-mb">
+          <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Do you have existing loans you want to migrate to Ned?</div>
+          <div class="check-group col-1">
+            <label class="check-item"><input type="radio" name="migrate_loans" value="Yes — for repayment servicing" /> Yes — for repayment servicing</label>
+            <label class="check-item"><input type="radio" name="migrate_loans" value="Yes — for monitoring only (no repayment processing)" /> Yes — for monitoring only (no repayment processing)</label>
+            <label class="check-item"><input type="radio" name="migrate_loans" value="No" /> No</label>
+          </div>
+        </div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Approximate number of loans to migrate</label><input type="number" name="migrate_count" placeholder="0" min="0" /></div>
+          <div class="field"><label class="field-label">Approximate total dollar amount</label><input type="text" name="migrate_dollars" placeholder="$0,000,000" /></div>
+        </div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Loan types / structures</label><input type="text" name="migrate_types" placeholder="e.g. Term loans, RBF" /></div>
+          <div class="field"><label class="field-label">Age range of loans remaining</label><input type="text" name="migrate_age" placeholder='e.g. "6–24 months remaining"' /></div>
+        </div>
+        <div class="field">
+          <label class="field-label">What banks do your borrowers primarily use?</label>
+          <div class="field-hint">Helps us flag Plaid connectivity issues in advance</div>
+          <textarea name="borrower_banks" placeholder="List what you know…" style="min-height:56px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 4 — Loan Program Overview & Mechanics
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-4">
+    <div class="step-title">Loan Program Configuration</div>
+    <div class="step-desc">Complete one copy for each loan program you plan to run on Ned. This tells our team how to configure your borrower application, eligibility criteria, scoring, and platform settings. You do not need to share your proprietary calculations — we will translate your inputs into platform settings and confirm with you before anything goes live.</div>
+
+    <div class="section">
+      <div class="section-title">Part 1 — Program Overview</div>
+      <div class="field field-mb">
+        <label class="field-label">Program name (as you'd like it to appear to borrowers)</label>
+        <input type="text" name="program_name" placeholder="e.g. Working Capital Loan" />
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">Short description of this program (1–2 sentences, as a borrower would read it)</label>
+        <textarea name="program_description" style="min-height:56px;" placeholder="e.g. Flexible working capital for established small businesses in the Midwest…"></textarea>
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">What is the primary mission or purpose of this program?</label>
+        <div class="field-hint">e.g. "Provide working capital to minority-owned food businesses in Illinois"</div>
+        <textarea name="program_mission" style="min-height:56px;" placeholder="Describe the mission or purpose…"></textarea>
       </div>
       <hr class="divider" />
-      <span class="field-label">Key eligibility criteria</span>
-      <div class="row row-3">
-        <div class="field"><label for="min-revenue">Min annual revenue</label><input type="text" id="min-revenue" name="min_revenue" placeholder="$50,000" /></div>
-        <div class="field"><label for="min-tib">Min time in business</label><input type="text" id="min-tib" name="min_time_in_business" placeholder="2 years" /></div>
-        <div class="field"><label for="min-credit">Min credit score (or N/A)</label><input type="text" id="min-credit" name="min_credit_score" placeholder="620 or N/A" /></div>
+      <div class="row row-2 field-mb">
+        <div class="field">
+          <label class="field-label">Is this program funded by a specific grant, investor, or capital source with reporting or eligibility requirements?</label>
+          <select name="program_funded">
+            <option value="">Select…</option>
+            <option>No</option>
+            <option>Yes — will describe in notes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Does this program have a defined end date or fund expiration?</label>
+          <select name="program_end_date">
+            <option value="">Select…</option>
+            <option>No / Evergreen</option>
+            <option>Yes — will provide date</option>
+          </select>
+        </div>
       </div>
       <div class="row row-2">
-        <div class="field"><label for="geo-restrict">Geographic restriction (if any)</label><input type="text" id="geo-restrict" name="geo_restriction" placeholder="e.g. Illinois only, or None" /></div>
-        <div class="field"><label for="mission-restrict">Mission / demographic focus (if any)</label><input type="text" id="mission-restrict" name="mission_focus" placeholder="e.g. minority-owned, or None" /></div>
-      </div>
-      <div class="field"><label for="other-criteria">Any other eligibility notes</label><textarea id="other-criteria" name="other_criteria" style="min-height:56px;" placeholder="e.g. Must have active business checking, no open bankruptcies…"></textarea></div>
-      <hr class="divider" />
-      <div class="row row-2">
-        <div class="field"><label for="num-programs">Number of loan programs to configure</label><input type="number" id="num-programs" name="num_programs" placeholder="1" min="1" /></div>
-        <div class="field"><label for="program-funded">Specific grant / capital source with reporting requirements?</label><select id="program-funded" name="program_funded"><option value="">Select...</option><option>No</option><option>Yes — will describe in notes</option></select></div>
+        <div class="field"><label class="field-label">Funding source description (if applicable)</label><input type="text" name="program_funder_desc" placeholder="e.g. CDFI Fund grant, SBA intermediary…" /></div>
+        <div class="field"><label class="field-label">Program end date (if applicable)</label><input type="date" name="program_end_date_val" /></div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-title">5 · Team &amp; Readiness</div>
-      <div class="field" style="margin-bottom:14px;"><label for="team-users">Who will use Ned day-to-day? (role titles)</label><input type="text" id="team-users" name="team_users" placeholder="e.g. Loan officers, underwriters, portfolio manager" /></div>
-      <div class="row row-2">
-        <div class="field"><label for="tech-comfort">Team's comfort with new tech</label><select id="tech-comfort" name="tech_comfort"><option value="">Select...</option><option>Very comfortable — adopt new tools regularly</option><option>Moderately comfortable — some friction expected</option><option>Some hesitation — change takes time</option><option>Significant hesitation — careful rollout needed</option></select></div>
-        <div class="field"><label for="year1-book">% of loan book on Ned in Year 1</label><select id="year1-book" name="year1_book"><option value="">Select...</option><option>Less than 25%</option><option>25–50%</option><option>50–75%</option><option>75–100%</option></select></div>
+      <div class="section-title">Part 2 — Loan Mechanics</div>
+      <div class="section-note">These fields define what the loan looks like. Ned uses these to set up your borrower application and configure repayment.</div>
+
+      <div class="field-mb">
+        <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Loan type (select one)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="loan_type" value="Term loan (fixed amount, fixed repayment schedule)" /> Term loan (fixed amount, fixed repayment schedule)</label>
+          <label class="check-item"><input type="radio" name="loan_type" value="Revenue-based repayment (amount varies with borrower revenue)" /> Revenue-based repayment (amount varies with borrower revenue)</label>
+          <label class="check-item"><input type="radio" name="loan_type" value="Line of credit (revolving draw)" /> Line of credit (revolving draw)</label>
+        </div>
+        <input type="text" name="loan_type_other" placeholder="Other: _______________" style="margin-top:8px;max-width:280px;" />
       </div>
-      <div class="field"><label for="additional-notes">Anything else we should know before configuration?</label><textarea id="additional-notes" name="additional_notes" placeholder="Plaid connectivity concerns, special borrower populations, hard cutover dates, compliance contacts…"></textarea></div>
+      <hr class="divider" />
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum loan amount</label><input type="text" name="loan_min" placeholder="$5,000" /></div>
+        <div class="field"><label class="field-label">Maximum loan amount</label><input type="text" name="loan_max" placeholder="$150,000" /></div>
+      </div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum term</label><input type="text" name="term_min" placeholder="6 months" /></div>
+        <div class="field"><label class="field-label">Maximum term</label><input type="text" name="term_max" placeholder="36 months" /></div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Repayment structure</div>
+        <div class="row row-2">
+          <div class="field"><label class="field-label">Repayment frequency</label>
+            <select name="repay_freq"><option value="">Select…</option><option>Weekly</option><option>Bi-weekly</option><option>Monthly</option><option>Revenue-based (variable)</option></select>
+          </div>
+          <div class="field"><label class="field-label">For revenue-based: revenue share % of monthly revenue</label><input type="text" name="revenue_share_pct" placeholder="e.g. 8%" /></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Interest rate (APR)</label><input type="text" name="rate_apr" placeholder="e.g. 12%" /></div>
+        <div class="field"><label class="field-label">Factor rate (if applicable)</label><input type="text" name="rate_factor" placeholder="e.g. 1.15x" /></div>
+      </div>
+      <div class="field-mb">
+        <label class="check-item"><input type="checkbox" name="rate_zero" value="Yes" /> No interest / 0% program</label>
+      </div>
+      <hr class="divider" />
+      <div class="row row-2 field-mb">
+        <div class="field">
+          <label class="field-label">Origination or closing fee?</label>
+          <select name="origination_fee_yn"><option value="">Select…</option><option>No</option><option>Yes</option></select>
+        </div>
+        <div class="field"><label class="field-label">Amount or % (if yes)</label><input type="text" name="origination_fee_amount" placeholder="e.g. 2% or $500" /></div>
+      </div>
+      <div class="field-mb">
+        <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">If origination fee applies, how is it collected?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="fee_collection" value="Deducted from disbursement" /> Deducted from disbursement</label>
+          <label class="check-item"><input type="radio" name="fee_collection" value="Paid separately" /> Paid separately</label>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Prepayment policy</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="prepayment" value="Borrowers may prepay at any time with no penalty" /> Borrowers may prepay at any time with no penalty</label>
+          <label class="check-item"><input type="radio" name="prepayment" value="Prepayment penalty applies" /> Prepayment penalty applies</label>
+        </div>
+        <input type="text" name="prepayment_penalty_desc" placeholder="Describe prepayment penalty (if applicable)…" style="margin-top:8px;" />
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-size:13px;font-weight:500;color:#333;margin-bottom:8px;">Disbursement method</div>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="disbursement" value="ACH to borrower's business bank account" /> ACH to borrower's business bank account</label>
+          <label class="check-item"><input type="checkbox" name="disbursement" value="Check" /> Check</label>
+          <label class="check-item"><input type="checkbox" name="disbursement" value="Wire" /> Wire</label>
+        </div>
+        <input type="text" name="disbursement_other" placeholder="Other: _______________" style="margin-top:8px;max-width:280px;" />
+      </div>
+      <div class="field">
+        <label class="field-label">Number of distinct loan programs to configure</label>
+        <input type="number" name="num_programs" placeholder="1" min="1" style="max-width:120px;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 5 — Eligibility: Revenue, Cash Flow, Business
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-5">
+    <div class="step-title">Borrower Eligibility Criteria</div>
+    <div class="step-desc">This section maps directly to Ned's scoring engine. For each criterion, set your threshold and tell us how strictly it should be applied (hard cutoff vs. flexible review), and rate its priority. Thresholds set the eligibility floor; priority weights shape how criteria are scored relative to each other.</div>
+
+    <div class="section">
+      <div class="section-title">3A — Revenue &amp; Loan Size</div>
+      <div class="field-mb">
+        <div class="row row-2">
+          <div class="field"><label class="field-label">Minimum annual revenue</label><div class="field-hint">Ned verifies this from 12 months of bank transaction data via Plaid.</div><input type="text" name="min_revenue" placeholder="$50,000" /></div>
+          <div class="field"><label class="field-label">Maximum annual revenue (if any cap)</label><input type="text" name="max_revenue" placeholder="Leave blank if no cap" /></div>
+        </div>
+      </div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Cutoff type</label><select name="revenue_cutoff"><option value="">Select…</option><option>Hard cutoff — automatically disqualify if not met</option><option>Soft flag — flag for manual review, but don't auto-disqualify</option><option>Not using this criterion</option></select></div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="revenue_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <label class="field-label">Loan-to-revenue limit — maximum loan as a % of annual revenue</label>
+        <div class="field-hint">Example: If set to 25%, a borrower with $200K revenue can receive a maximum $50K loan.</div>
+        <input type="text" name="loan_to_revenue_pct" placeholder="e.g. 25%" style="max-width:160px;" />
+      </div>
+      <div class="row row-2">
+        <div class="field"><label class="field-label">Revenue basis</label><select name="loan_to_revenue_basis"><option value="">Select…</option><option>Use trailing 12-month revenue</option><option>Use stated annual revenue</option><option>Either</option><option>Not using this criterion</option></select></div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="loan_to_revenue_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
     </div>
 
-    <div class="submit-row">
-      <div class="submit-note">Return to <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a; text-decoration:none; border-bottom:1px solid #ccc;">camille@nedhelps.com</a> · Ned will follow up within 2 business days.</div>
-      <button type="submit" class="btn-submit">Submit intake →</button>
+    <div class="section">
+      <div class="section-title">3B — Cash Flow &amp; Financial Health</div>
+      <div class="section-note">These criteria measure whether the borrower can realistically make loan payments. Ned pulls this data automatically from the borrower's connected bank account — no statements required.</div>
+
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Debt Service Coverage Ratio (DSCR)</div>
+        <div class="field-hint" style="margin-bottom:8px;">DSCR above 1.0 means the business generates more cash than it needs to cover existing debt. Most programs set a floor between 1.0 and 1.5.</div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Minimum acceptable DSCR</label><input type="text" name="dscr_min" placeholder="e.g. 1.0" /></div>
+          <div class="field"><label class="field-label">Target DSCR (ideal threshold, above minimum)</label><input type="text" name="dscr_target" placeholder="e.g. 1.25" /></div>
+        </div>
+        <div class="row row-2">
+          <div class="field"><label class="field-label">Cutoff type</label><select name="dscr_cutoff"><option value="">Select…</option><option>Hard cutoff</option><option>Soft flag for review</option><option>Not using this criterion</option></select></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="dscr_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Cash flow consistency</div>
+        <div class="row row-3 field-mb">
+          <div class="field"><label class="field-label">Minimum % of months with positive net cash flow</label><input type="text" name="cashflow_pct" placeholder="e.g. 60%" /></div>
+          <div class="field"><label class="field-label">Look-back period (months)</label><input type="number" name="cashflow_lookback" placeholder="e.g. 18" min="1" /></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="cashflow_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">NSF / overdraft events</div>
+        <div class="row row-3 field-mb">
+          <div class="field"><label class="field-label">Maximum acceptable NSF or overdraft events</label><input type="number" name="nsf_max" placeholder="e.g. 2" min="0" /></div>
+          <div class="field"><label class="field-label">Look-back period (months)</label><input type="number" name="nsf_lookback" placeholder="e.g. 6" min="1" /></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="nsf_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Negative balance days</div>
+        <div class="row row-3 field-mb">
+          <div class="field"><label class="field-label">Maximum days with a negative account balance</label><input type="number" name="neg_balance_days" placeholder="e.g. 5" min="0" /></div>
+          <div class="field"><label class="field-label">Look-back period (months)</label><input type="number" name="neg_balance_lookback" placeholder="e.g. 12" min="1" /></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="neg_balance_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Cash available for debt service (CFADS)</div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Minimum cash remaining after operating expenses / month</label><input type="text" name="cfads_min" placeholder="$0,000/month" /></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="cfads_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Outstanding debt / existing loans</div>
+        <div class="check-group col-1" style="margin-bottom:10px;">
+          <label class="check-item"><input type="radio" name="existing_debt" value="Yes — existing debt is acceptable; we evaluate capacity through DSCR and CFADS" /> Yes — existing debt is acceptable; we evaluate capacity through DSCR and CFADS</label>
+          <label class="check-item"><input type="radio" name="existing_debt" value="No — borrowers with other outstanding term debt are ineligible" /> No — borrowers with other outstanding term debt are ineligible</label>
+          <label class="check-item"><input type="radio" name="existing_debt" value="Case-by-case — flag for manual review" /> Case-by-case — flag for manual review</label>
+        </div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="existing_debt_priority" style="max-width:260px;"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
     </div>
 
-    <div id="thanks" style="display:none; text-align:center; padding:24px; background:#fff; border:1px solid #e5e3de; border-radius:10px; margin-top:16px;">
-      <p style="font-size:16px; font-weight:600; margin-bottom:6px;">Thanks for submitting!</p>
-      <p style="font-size:13px; color:#666;">We'll follow up within 2 business days.</p>
+    <div class="section">
+      <div class="section-title">3C — Profitability &amp; Growth</div>
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Minimum annual profit margin</label><div class="field-hint">Revenue minus expenses as % of revenue</div><input type="text" name="min_profit_margin" placeholder="e.g. 5%" /></div>
+        <div class="field"><label class="field-label">Cutoff type</label><select name="profit_cutoff"><option value="">Select…</option><option>Hard cutoff</option><option>Soft flag</option><option>Not using</option></select></div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="profit_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
+      <hr class="divider" />
+      <div class="row row-2 field-mb">
+        <div class="field">
+          <label class="field-label">Do you require total revenue to exceed total expenses over the last 24 months?</label>
+          <select name="operating_efficiency"><option value="">Select…</option><option>Yes — must be cash-flow positive overall</option><option>No</option><option>Not using</option></select>
+        </div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="operating_efficiency_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
+      <hr class="divider" />
+      <div class="row row-2">
+        <div class="field">
+          <label class="field-label">Minimum revenue growth requirement (year-over-year)</label>
+          <input type="text" name="revenue_growth_min" placeholder="e.g. 10% or N/A" />
+        </div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="revenue_growth_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
     </div>
+
+    <div class="section">
+      <div class="section-title">3D — Business Eligibility</div>
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Minimum operating history</label><input type="text" name="min_tib" placeholder="e.g. 2 years" /></div>
+        <div class="field"><label class="field-label">Verification method</label><select name="tib_verification"><option value="">Select…</option><option>Business registration date</option><option>Bank transaction history</option><option>Either method acceptable</option></select></div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="tib_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Geographic requirements</div>
+        <div class="check-group col-1" style="margin-bottom:8px;">
+          <label class="check-item"><input type="radio" name="geo_type" value="No geographic restriction" /> No geographic restriction</label>
+          <label class="check-item"><input type="radio" name="geo_type" value="State restriction" /> State / region restriction</label>
+          <label class="check-item"><input type="radio" name="geo_type" value="County-level restriction" /> County-level restriction</label>
+        </div>
+        <input type="text" name="geo_states" placeholder="List states, regions, or counties if applicable…" style="margin-bottom:8px;" />
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="geo_metro" value="Must be located in a metropolitan county (urban area with 50,000+ residents, per USDA definition)" /> Must be in a metropolitan county (urban, 50,000+ residents per USDA)</label>
+          <label class="check-item"><input type="radio" name="geo_metro" value="Must be located in a nonmetropolitan / rural county" /> Must be in a nonmetropolitan / rural county</label>
+          <label class="check-item"><input type="radio" name="geo_metro" value="No preference on metro vs. rural" /> No preference on metro vs. rural</label>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Minimum months of bank transaction history required</label><div class="field-hint">Ned requires at least 12; 24 months enables full analysis.</div><input type="number" name="bank_history_months" placeholder="12" min="12" /></div>
+        <div class="field"><label class="field-label">Active business checking account required?</label><select name="biz_checking"><option value="">Select…</option><option>Required</option><option>Not required</option></select></div>
+        <div class="field"><label class="field-label">Maximum number of owners</label><input type="number" name="max_owners" placeholder="Leave blank if no limit" min="1" /></div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Minimum full-time employee requirement</div>
+        <div class="check-group">
+          <label class="check-item"><input type="radio" name="min_employees" value="At least 1 full-time employee" /> At least 1 FTE</label>
+          <label class="check-item"><input type="radio" name="min_employees" value="At least 2 full-time employees" /> At least 2 FTE</label>
+          <label class="check-item"><input type="radio" name="min_employees" value="At least 5 full-time employees" /> At least 5 FTE</label>
+          <label class="check-item"><input type="radio" name="min_employees" value="At least 10 full-time employees" /> At least 10 FTE</label>
+          <label class="check-item"><input type="radio" name="min_employees" value="At least 20 full-time employees" /> At least 20 FTE</label>
+          <label class="check-item"><input type="radio" name="min_employees" value="No minimum / no preference" /> No minimum / no preference</label>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Accounting system / bookkeeping requirement</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="accounting_req" value="Yes — required for eligibility" /> Yes — required for eligibility</label>
+          <label class="check-item"><input type="radio" name="accounting_req" value="Preferred but not required — flag if absent" /> Preferred but not required — flag if absent</label>
+          <label class="check-item"><input type="radio" name="accounting_req" value="No — not required" /> No — not required</label>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Industry restrictions</div>
+        <div class="check-group col-1" style="margin-bottom:8px;">
+          <label class="check-item"><input type="radio" name="industry_restriction_type" value="No industry restrictions" /> No industry restrictions</label>
+          <label class="check-item"><input type="radio" name="industry_restriction_type" value="Restricted to specific industries" /> Restricted to specific industries</label>
+          <label class="check-item"><input type="radio" name="industry_restriction_type" value="Excluded industries apply" /> Excluded industries (certain sectors ineligible)</label>
+        </div>
+        <input type="text" name="industry_list" placeholder="List included or excluded industries if applicable…" />
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Mission / demographic eligibility (check all that apply for this program)</div>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Program is open to all eligible borrowers" /> Open to all eligible borrowers</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Must be minority-owned" /> Minority-owned</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Must be Hispanic-owned" /> Hispanic-owned</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Must be women-owned" /> Women-owned</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Must be veteran-owned" /> Veteran-owned</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="Low-income owner qualification" /> Low-income owner (at or below HUD AMI threshold)</label>
+          <label class="check-item"><input type="checkbox" name="mission_eligibility" value="CDFI-qualified borrower criteria" /> CDFI-qualified borrower criteria</label>
+        </div>
+        <input type="text" name="mission_eligibility_other" placeholder="Other / describe CDFI criteria…" style="margin-top:8px;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 6 — Eligibility: Owner/Credit + Priority Matrix
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-6">
+    <div class="step-title">Owner &amp; Credit + Priority Summary</div>
+
+    <div class="section">
+      <div class="section-title">3E — Owner &amp; Credit</div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Owner credit standing</div>
+        <div class="check-group col-1" style="margin-bottom:10px;">
+          <label class="check-item"><input type="radio" name="credit_check" value="Yes — check credit" /> Yes, we check credit</label>
+          <label class="check-item"><input type="radio" name="credit_check" value="No credit check" /> No credit check</label>
+        </div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Minimum acceptable credit profile</label>
+            <select name="credit_profile"><option value="">Select…</option><option>Good standing (no recent derogatory marks)</option><option>Fair credit acceptable</option><option>Minimum score applies (enter below)</option></select>
+          </div>
+          <div class="field"><label class="field-label">Minimum credit score (if applicable)</label><input type="number" name="min_credit_score" placeholder="e.g. 620" min="300" max="850" /></div>
+        </div>
+        <div class="row row-2">
+          <div class="field"><label class="field-label">Review credit for all owners with ownership of ___% or more</label><input type="text" name="credit_ownership_threshold" placeholder="e.g. 20% or 25%" /></div>
+          <div class="field"><label class="field-label">Priority weight</label><select name="credit_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Trade line requirement</div>
+        <div class="check-group col-1" style="margin-bottom:8px;">
+          <label class="check-item"><input type="radio" name="trade_line" value="Required — must have active trade lines (at least 12 months of personal credit history)" /> Required — at least 12 months of personal credit history</label>
+          <label class="check-item"><input type="radio" name="trade_line" value="Not required" /> Not required</label>
+        </div>
+        <div class="field"><label class="field-label">Priority weight</label><select name="trade_line_priority" style="max-width:260px;"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option><option>Not using</option></select></div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Bankruptcies, judgments, and liens</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="bankruptcies" value="Open bankruptcies, judgments, tax liens, collections, or charge-offs in the last 24 months are disqualifying" /> Open bankruptcies, judgments, tax liens, collections, or charge-offs in the last 24 months are disqualifying</label>
+          <label class="check-item"><input type="radio" name="bankruptcies" value="Open bankruptcies only are disqualifying" /> Open bankruptcies only are disqualifying</label>
+          <label class="check-item"><input type="radio" name="bankruptcies" value="Review case-by-case — flag for manual review" /> Review case-by-case — flag for manual review</label>
+          <label class="check-item"><input type="radio" name="bankruptcies" value="Not evaluated" /> Not evaluated</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3F — Custom / Program-Specific Criteria</div>
+      <div class="section-note">Use this section for any eligibility criteria unique to your program that don't fit the categories above.</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Custom question 1</label><input type="text" name="custom_q1" placeholder="e.g. Do you have a signed lease?" /></div>
+        <div class="field"><label class="field-label">Required answer / type</label><select name="custom_q1_answer"><option value="">Select…</option><option>Yes required</option><option>No required</option><option>Either / informational</option></select></div>
+      </div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Custom question 2</label><input type="text" name="custom_q2" placeholder="" /></div>
+        <div class="field"><label class="field-label">Required answer / type</label><select name="custom_q2_answer"><option value="">Select…</option><option>Yes required</option><option>No required</option><option>Either / informational</option></select></div>
+      </div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum owner equity contribution required?</label><select name="equity_contrib"><option value="">Select…</option><option>No</option><option>Yes</option></select></div>
+        <div class="field"><label class="field-label">If yes — minimum % of total project cost</label><input type="text" name="equity_contrib_pct" placeholder="e.g. 10%" /></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Any other eligibility criteria we should know about?</label>
+        <textarea name="other_criteria" placeholder="Describe any additional criteria not captured above…"></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3G — Criteria Priority Summary Matrix</div>
+      <div class="section-note">This matrix consolidates the priority weights for all criteria so you and the Ned team can review your overall scoring configuration in one place. Check one box per row. This directly informs how Ned weights each criterion in your scoring engine.</div>
+      <table class="matrix-table">
+        <thead>
+          <tr><th>Criterion</th><th>Most Important</th><th>Important</th><th>Neutral</th><th>Less Important</th><th>Not Using</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Annual revenue</td><td><input type="radio" name="m_revenue" value="Most Important" /></td><td><input type="radio" name="m_revenue" value="Important" /></td><td><input type="radio" name="m_revenue" value="Neutral" /></td><td><input type="radio" name="m_revenue" value="Less Important" /></td><td><input type="radio" name="m_revenue" value="Not Using" /></td></tr>
+          <tr><td>Loan-to-revenue ratio</td><td><input type="radio" name="m_ltr" value="Most Important" /></td><td><input type="radio" name="m_ltr" value="Important" /></td><td><input type="radio" name="m_ltr" value="Neutral" /></td><td><input type="radio" name="m_ltr" value="Less Important" /></td><td><input type="radio" name="m_ltr" value="Not Using" /></td></tr>
+          <tr><td>DSCR (debt service coverage)</td><td><input type="radio" name="m_dscr" value="Most Important" /></td><td><input type="radio" name="m_dscr" value="Important" /></td><td><input type="radio" name="m_dscr" value="Neutral" /></td><td><input type="radio" name="m_dscr" value="Less Important" /></td><td><input type="radio" name="m_dscr" value="Not Using" /></td></tr>
+          <tr><td>Cash flow consistency</td><td><input type="radio" name="m_cashflow" value="Most Important" /></td><td><input type="radio" name="m_cashflow" value="Important" /></td><td><input type="radio" name="m_cashflow" value="Neutral" /></td><td><input type="radio" name="m_cashflow" value="Less Important" /></td><td><input type="radio" name="m_cashflow" value="Not Using" /></td></tr>
+          <tr><td>NSF / overdraft events</td><td><input type="radio" name="m_nsf" value="Most Important" /></td><td><input type="radio" name="m_nsf" value="Important" /></td><td><input type="radio" name="m_nsf" value="Neutral" /></td><td><input type="radio" name="m_nsf" value="Less Important" /></td><td><input type="radio" name="m_nsf" value="Not Using" /></td></tr>
+          <tr><td>Negative balance days</td><td><input type="radio" name="m_neg_bal" value="Most Important" /></td><td><input type="radio" name="m_neg_bal" value="Important" /></td><td><input type="radio" name="m_neg_bal" value="Neutral" /></td><td><input type="radio" name="m_neg_bal" value="Less Important" /></td><td><input type="radio" name="m_neg_bal" value="Not Using" /></td></tr>
+          <tr><td>Net cash flow trend (YoY)</td><td><input type="radio" name="m_cashflow_trend" value="Most Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Neutral" /></td><td><input type="radio" name="m_cashflow_trend" value="Less Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Not Using" /></td></tr>
+          <tr><td>Cash available for debt service (CFADS)</td><td><input type="radio" name="m_cfads" value="Most Important" /></td><td><input type="radio" name="m_cfads" value="Important" /></td><td><input type="radio" name="m_cfads" value="Neutral" /></td><td><input type="radio" name="m_cfads" value="Less Important" /></td><td><input type="radio" name="m_cfads" value="Not Using" /></td></tr>
+          <tr><td>Outstanding debt / existing loans</td><td><input type="radio" name="m_existing_debt" value="Most Important" /></td><td><input type="radio" name="m_existing_debt" value="Important" /></td><td><input type="radio" name="m_existing_debt" value="Neutral" /></td><td><input type="radio" name="m_existing_debt" value="Less Important" /></td><td><input type="radio" name="m_existing_debt" value="Not Using" /></td></tr>
+          <tr><td>Profit margin</td><td><input type="radio" name="m_profit" value="Most Important" /></td><td><input type="radio" name="m_profit" value="Important" /></td><td><input type="radio" name="m_profit" value="Neutral" /></td><td><input type="radio" name="m_profit" value="Less Important" /></td><td><input type="radio" name="m_profit" value="Not Using" /></td></tr>
+          <tr><td>Operating efficiency</td><td><input type="radio" name="m_op_eff" value="Most Important" /></td><td><input type="radio" name="m_op_eff" value="Important" /></td><td><input type="radio" name="m_op_eff" value="Neutral" /></td><td><input type="radio" name="m_op_eff" value="Less Important" /></td><td><input type="radio" name="m_op_eff" value="Not Using" /></td></tr>
+          <tr><td>Revenue growth</td><td><input type="radio" name="m_rev_growth" value="Most Important" /></td><td><input type="radio" name="m_rev_growth" value="Important" /></td><td><input type="radio" name="m_rev_growth" value="Neutral" /></td><td><input type="radio" name="m_rev_growth" value="Less Important" /></td><td><input type="radio" name="m_rev_growth" value="Not Using" /></td></tr>
+          <tr><td>Time in business</td><td><input type="radio" name="m_tib" value="Most Important" /></td><td><input type="radio" name="m_tib" value="Important" /></td><td><input type="radio" name="m_tib" value="Neutral" /></td><td><input type="radio" name="m_tib" value="Less Important" /></td><td><input type="radio" name="m_tib" value="Not Using" /></td></tr>
+          <tr><td>Geographic location</td><td><input type="radio" name="m_geo" value="Most Important" /></td><td><input type="radio" name="m_geo" value="Important" /></td><td><input type="radio" name="m_geo" value="Neutral" /></td><td><input type="radio" name="m_geo" value="Less Important" /></td><td><input type="radio" name="m_geo" value="Not Using" /></td></tr>
+          <tr><td>Employee count</td><td><input type="radio" name="m_employees" value="Most Important" /></td><td><input type="radio" name="m_employees" value="Important" /></td><td><input type="radio" name="m_employees" value="Neutral" /></td><td><input type="radio" name="m_employees" value="Less Important" /></td><td><input type="radio" name="m_employees" value="Not Using" /></td></tr>
+          <tr><td>Accounting system / bookkeeping</td><td><input type="radio" name="m_accounting" value="Most Important" /></td><td><input type="radio" name="m_accounting" value="Important" /></td><td><input type="radio" name="m_accounting" value="Neutral" /></td><td><input type="radio" name="m_accounting" value="Less Important" /></td><td><input type="radio" name="m_accounting" value="Not Using" /></td></tr>
+          <tr><td>Industry / sector</td><td><input type="radio" name="m_industry" value="Most Important" /></td><td><input type="radio" name="m_industry" value="Important" /></td><td><input type="radio" name="m_industry" value="Neutral" /></td><td><input type="radio" name="m_industry" value="Less Important" /></td><td><input type="radio" name="m_industry" value="Not Using" /></td></tr>
+          <tr><td>Mission / demographic eligibility</td><td><input type="radio" name="m_mission" value="Most Important" /></td><td><input type="radio" name="m_mission" value="Important" /></td><td><input type="radio" name="m_mission" value="Neutral" /></td><td><input type="radio" name="m_mission" value="Less Important" /></td><td><input type="radio" name="m_mission" value="Not Using" /></td></tr>
+          <tr><td>Owner credit standing</td><td><input type="radio" name="m_credit" value="Most Important" /></td><td><input type="radio" name="m_credit" value="Important" /></td><td><input type="radio" name="m_credit" value="Neutral" /></td><td><input type="radio" name="m_credit" value="Less Important" /></td><td><input type="radio" name="m_credit" value="Not Using" /></td></tr>
+          <tr><td>Trade line history</td><td><input type="radio" name="m_trade" value="Most Important" /></td><td><input type="radio" name="m_trade" value="Important" /></td><td><input type="radio" name="m_trade" value="Neutral" /></td><td><input type="radio" name="m_trade" value="Less Important" /></td><td><input type="radio" name="m_trade" value="Not Using" /></td></tr>
+          <tr><td>Bankruptcies, judgments, liens</td><td><input type="radio" name="m_bk" value="Most Important" /></td><td><input type="radio" name="m_bk" value="Important" /></td><td><input type="radio" name="m_bk" value="Neutral" /></td><td><input type="radio" name="m_bk" value="Less Important" /></td><td><input type="radio" name="m_bk" value="Not Using" /></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 7 — Required Documents & Credit Policy
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-7">
+    <div class="step-title">Required Documents &amp; Credit Policy</div>
+
+    <div class="section">
+      <div class="section-title">Part 4 — Required Diligence Documents</div>
+      <div class="section-note">List every document you require from borrowers before final loan approval. Ned will configure your document checklist and request flow accordingly.</div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:8px;">Standard documents (check all that apply)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Government-issued photo ID (all owners above ownership threshold)" /> Government-issued photo ID (all owners above ownership threshold)</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Business registration / articles of incorporation / operating agreement" /> Business registration / articles of incorporation / operating agreement</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="EIN verification letter (IRS CP575 or equivalent)" /> EIN verification letter (IRS CP575 or equivalent)</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Voided check or bank letter (for ACH setup)" /> Voided check or bank letter (for ACH setup)</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Business bank account statements" /> Business bank account statements (Note: Plaid connection replaces statements for connected accounts)</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Business tax returns" /> Business tax returns</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Personal tax returns" /> Personal tax returns</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Personal financial statement" /> Personal financial statement</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Business plan or use-of-funds narrative" /> Business plan or use-of-funds narrative</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Signed loan application" /> Signed loan application</label>
+          <label class="check-item"><input type="checkbox" name="docs_standard" value="Signed borrower certification / self-attestation form" /> Signed borrower certification / self-attestation form</label>
+        </div>
+      </div>
+      <div class="row row-3 field-mb">
+        <div class="field"><label class="field-label">Bank statements — how many months?</label><input type="number" name="bank_stmt_months" placeholder="e.g. 12" min="1" /></div>
+        <div class="field"><label class="field-label">Business tax returns — how many years?</label><input type="number" name="biz_tax_years" placeholder="e.g. 2" min="1" /></div>
+        <div class="field"><label class="field-label">Personal tax returns — how many years?</label><input type="number" name="personal_tax_years" placeholder="e.g. 2" min="1" /></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Any program-specific documents not listed above?</label>
+        <textarea name="docs_custom" placeholder="List document name, required or optional, and when collected (application / approval / closing)…"></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 5A — Delinquency &amp; Default</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">A payment is considered delinquent when it is ___ or more days past due</label><div class="field-hint">Common thresholds: 1, 5, 15, or 30 days</div><input type="number" name="delinquent_days" placeholder="e.g. 15" min="1" /></div>
+      </div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:8px;">Default definition (check all that apply)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="checkbox" name="default_def" value="Payment is days past due" /> Payment is ___ or more days past due: <input type="number" name="default_days" placeholder="e.g. 90" min="1" style="width:80px;display:inline-block;margin-left:6px;" /></label>
+          <label class="check-item"><input type="checkbox" name="default_def" value="Consecutive missed payments" /> ___ or more consecutive missed payments: <input type="number" name="default_missed" placeholder="e.g. 3" min="1" style="width:80px;display:inline-block;margin-left:6px;" /></label>
+          <label class="check-item"><input type="checkbox" name="default_def" value="Borrower becomes insolvent or files for bankruptcy" /> Borrower becomes insolvent or files for bankruptcy</label>
+          <label class="check-item"><input type="checkbox" name="default_def" value="Borrower violates material loan covenant" /> Borrower violates material loan covenant</label>
+        </div>
+        <input type="text" name="default_other" placeholder="Other: _______________" style="margin-top:8px;max-width:340px;" />
+      </div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:8px;">Aging buckets — how do you categorize past-due accounts?</div>
+        <div class="row row-4">
+          <div class="field"><label class="field-label">Early delinquency</label><input type="text" name="aging_early" placeholder="1–___ days" /></div>
+          <div class="field"><label class="field-label">Delinquent</label><input type="text" name="aging_mid" placeholder="___–___ days" /></div>
+          <div class="field"><label class="field-label">Seriously delinquent</label><input type="text" name="aging_serious" placeholder="___–___ days" /></div>
+          <div class="field"><label class="field-label">Default / charge-off eligible</label><input type="text" name="aging_default" placeholder="___+ days" /></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Charge-off policy — loans are charged off after ___ days past due (or describe your policy)</label>
+        <input type="text" name="chargeoff_policy" placeholder="e.g. 180 days, or case-by-case / determined by credit committee" />
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 5B — Collections &amp; Loss Mitigation</div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">When a payment is first missed, what is your standard response?</div>
+        <div class="row row-2 field-mb">
+          <div class="field"><label class="field-label">Day ___: First missed payment — Action</label><input type="text" name="collections_day1" placeholder="e.g. Automated reminder" /></div>
+          <div class="field"><label class="field-label">Day ___: — Action</label><input type="text" name="collections_day2" placeholder="e.g. Outreach call" /></div>
+        </div>
+        <div class="row row-2">
+          <div class="field"><label class="field-label">Day ___: — Action</label><input type="text" name="collections_day3" placeholder="e.g. Formal notice" /></div>
+          <div class="field"><label class="field-label">Day ___: Formal default notice — Action</label><input type="text" name="collections_day4" placeholder="e.g. Legal referral" /></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Do you offer loan modifications, deferments, or workout arrangements?</label><select name="modifications"><option value="">Select…</option><option>Yes — will describe</option><option>No</option><option>Case-by-case</option></select></div>
+        <div class="field"><label class="field-label">Describe triggers and process (if yes)</label><input type="text" name="modifications_desc" placeholder="e.g. After 60 days, borrower must request and qualify…" /></div>
+      </div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Do you use a third-party collections agency?</label><select name="collections_agency"><option value="">Select…</option><option>No</option><option>Yes — at charge-off</option><option>Yes — at default</option><option>Yes — at another stage</option></select></div>
+        <div class="field"><label class="field-label">Late fee policy</label><input type="text" name="late_fee" placeholder="e.g. $25 or 5% of payment, after 15 days — or None" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 5C — Early Repayment</div>
+      <div class="field-mb">
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="prepayment_policy" value="Yes, with no penalty" /> Borrowers may repay early with no penalty</label>
+          <label class="check-item"><input type="radio" name="prepayment_policy" value="Yes, with a prepayment penalty" /> Yes, with a prepayment penalty</label>
+          <label class="check-item"><input type="radio" name="prepayment_policy" value="No early repayment permitted" /> No early repayment permitted</label>
+        </div>
+        <input type="text" name="prepayment_penalty_detail" placeholder="Describe prepayment penalty terms if applicable…" style="margin-top:8px;" />
+      </div>
+      <div class="field">
+        <label class="field-label">For revenue-based loans: is there a buyout option (fixed payoff amount before full repayment period)?</label>
+        <div class="check-group col-1" style="margin-bottom:8px;">
+          <label class="check-item"><input type="radio" name="buyout" value="No" /> No</label>
+          <label class="check-item"><input type="radio" name="buyout" value="Yes" /> Yes</label>
+        </div>
+        <input type="text" name="buyout_terms" placeholder="Describe buyout terms if applicable…" style="max-width:400px;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 8 — Legal Documents
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-8">
+    <div class="step-title">Legal Documents &amp; Templates</div>
+    <div class="step-desc">Ned integrates with Dropbox Sign for e-signature and closing. List the legal documents your borrowers sign at each stage. If you have existing templates, we'll format them for the platform. If you need templates, note that below.</div>
+
+    <div class="section">
+      <div class="section-title">Part 6A — Application Stage</div>
+      <table class="form-table">
+        <thead><tr><th>Document</th><th style="width:160px;">Have existing template?</th><th style="width:160px;">Need Ned / legal help?</th></tr></thead>
+        <tbody>
+          <tr><td>Borrower authorization / consent to pull bank data</td><td><div class="yn"><label><input type="radio" name="doc_auth_have" value="Y" />Y</label><label><input type="radio" name="doc_auth_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_auth_need" value="Y" />Y</label><label><input type="radio" name="doc_auth_need" value="N" />N</label></div></td></tr>
+          <tr><td>Privacy notice</td><td><div class="yn"><label><input type="radio" name="doc_privacy_have" value="Y" />Y</label><label><input type="radio" name="doc_privacy_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_privacy_need" value="Y" />Y</label><label><input type="radio" name="doc_privacy_need" value="N" />N</label></div></td></tr>
+          <tr><td>Application certification (borrower attests info is accurate)</td><td><div class="yn"><label><input type="radio" name="doc_cert_have" value="Y" />Y</label><label><input type="radio" name="doc_cert_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_cert_need" value="Y" />Y</label><label><input type="radio" name="doc_cert_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 6B — Approval / Commitment Stage</div>
+      <table class="form-table">
+        <thead><tr><th>Document</th><th style="width:160px;">Have existing template?</th><th style="width:160px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan commitment letter / term sheet</td><td><div class="yn"><label><input type="radio" name="doc_commit_have" value="Y" />Y</label><label><input type="radio" name="doc_commit_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_commit_need" value="Y" />Y</label><label><input type="radio" name="doc_commit_need" value="N" />N</label></div></td></tr>
+          <tr><td>Adverse action notice (for declines)</td><td><div class="yn"><label><input type="radio" name="doc_adverse_have" value="Y" />Y</label><label><input type="radio" name="doc_adverse_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_adverse_need" value="Y" />Y</label><label><input type="radio" name="doc_adverse_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 6C — Closing / Disbursement</div>
+      <table class="form-table">
+        <thead><tr><th>Document</th><th style="width:160px;">Have existing template?</th><th style="width:160px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan agreement / promissory note</td><td><div class="yn"><label><input type="radio" name="doc_note_have" value="Y" />Y</label><label><input type="radio" name="doc_note_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_note_need" value="Y" />Y</label><label><input type="radio" name="doc_note_need" value="N" />N</label></div></td></tr>
+          <tr><td>ACH authorization / debit authorization</td><td><div class="yn"><label><input type="radio" name="doc_ach_have" value="Y" />Y</label><label><input type="radio" name="doc_ach_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_ach_need" value="Y" />Y</label><label><input type="radio" name="doc_ach_need" value="N" />N</label></div></td></tr>
+          <tr><td>Personal guarantee (if required)</td><td><div class="yn"><label><input type="radio" name="doc_guarantee_have" value="Y" />Y</label><label><input type="radio" name="doc_guarantee_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_guarantee_need" value="Y" />Y</label><label><input type="radio" name="doc_guarantee_need" value="N" />N</label></div></td></tr>
+          <tr><td>Security agreement / UCC filing authorization (if required)</td><td><div class="yn"><label><input type="radio" name="doc_ucc_have" value="Y" />Y</label><label><input type="radio" name="doc_ucc_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_ucc_need" value="Y" />Y</label><label><input type="radio" name="doc_ucc_need" value="N" />N</label></div></td></tr>
+          <tr><td>Revenue share agreement (for RBF products)</td><td><div class="yn"><label><input type="radio" name="doc_rsa_have" value="Y" />Y</label><label><input type="radio" name="doc_rsa_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_rsa_need" value="Y" />Y</label><label><input type="radio" name="doc_rsa_need" value="N" />N</label></div></td></tr>
+          <tr><td>State-specific disclosure forms</td><td><div class="yn"><label><input type="radio" name="doc_state_have" value="Y" />Y</label><label><input type="radio" name="doc_state_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_state_need" value="Y" />Y</label><label><input type="radio" name="doc_state_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 6D — Servicing / Ongoing</div>
+      <table class="form-table">
+        <thead><tr><th>Document</th><th style="width:160px;">Have existing template?</th><th style="width:160px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan modification / deferment agreement</td><td><div class="yn"><label><input type="radio" name="doc_mod_have" value="Y" />Y</label><label><input type="radio" name="doc_mod_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_mod_need" value="Y" />Y</label><label><input type="radio" name="doc_mod_need" value="N" />N</label></div></td></tr>
+          <tr><td>Default / acceleration notice</td><td><div class="yn"><label><input type="radio" name="doc_default_notice_have" value="Y" />Y</label><label><input type="radio" name="doc_default_notice_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_default_notice_need" value="Y" />Y</label><label><input type="radio" name="doc_default_notice_need" value="N" />N</label></div></td></tr>
+          <tr><td>Payoff letter template</td><td><div class="yn"><label><input type="radio" name="doc_payoff_have" value="Y" />Y</label><label><input type="radio" name="doc_payoff_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_payoff_need" value="Y" />Y</label><label><input type="radio" name="doc_payoff_need" value="N" />N</label></div></td></tr>
+          <tr><td>Annual borrower certification (if required)</td><td><div class="yn"><label><input type="radio" name="doc_annual_cert_have" value="Y" />Y</label><label><input type="radio" name="doc_annual_cert_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_annual_cert_need" value="Y" />Y</label><label><input type="radio" name="doc_annual_cert_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Part 6E — State-Specific Compliance</div>
+      <div class="field field-mb">
+        <label class="field-label">What state(s) do your borrowers primarily operate in?</label>
+        <input type="text" name="compliance_states" placeholder="e.g. Illinois, Texas, California" />
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">Are there state-specific lending licenses, disclosures, or usury limitations that apply to this program that we should be aware of?</label>
+        <textarea name="compliance_notes" style="min-height:56px;" placeholder="Describe any state-specific compliance requirements…"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Do you have legal counsel who handles your lending compliance?</label>
+        <div class="field-hint">Name / firm — if you'd like us to coordinate with them</div>
+        <input type="text" name="legal_counsel" placeholder="e.g. Jane Smith, Smith &amp; Associates LLP" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 9 — Borrower Experience + Team & Readiness
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-9">
+    <div class="step-title">Borrower Experience &amp; Team Readiness</div>
+
+    <div class="section">
+      <div class="section-title">Part 7 — Borrower Application Experience</div>
+      <div class="section-note">Ned builds a white-labeled borrower application portal under your brand. This section tells us how to configure what borrowers see.</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Your organization's name as borrowers will see it</label><input type="text" name="brand_name" placeholder="e.g. Acme Lending" /></div>
+        <div class="field"><label class="field-label">Preferred subdomain</label><div class="field-hint">e.g. loans.yourorg.org or yourorg.nedhelps.com</div><input type="text" name="subdomain" placeholder="loans.yourorg.org" /></div>
+      </div>
+      <div class="field-mb">
+        <label class="field-label">Do you have brand guidelines / a logo to provide?</label>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="brand_logo" value="Yes — will attach" /> Yes — will attach</label>
+          <label class="check-item"><input type="radio" name="brand_logo" value="No" /> No</label>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:8px;">Primary language for borrower-facing content</div>
+        <div class="check-group">
+          <label class="check-item"><input type="radio" name="language" value="English" /> English</label>
+          <label class="check-item"><input type="radio" name="language" value="Spanish" /> Spanish</label>
+          <label class="check-item"><input type="radio" name="language" value="Both English and Spanish" /> Both</label>
+        </div>
+        <input type="text" name="language_other" placeholder="Other: _______________" style="margin-top:8px;max-width:260px;" />
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:6px;">Custom application questions</div>
+        <div class="section-note">Beyond Ned's standard fields, are there questions you want to ask borrowers? List them below.</div>
+        <div class="row row-3 field-mb">
+          <div class="field"><label class="field-label">Question 1</label><input type="text" name="custom_app_q1" placeholder="Question text…" /></div>
+          <div class="field"><label class="field-label">Answer type</label><select name="custom_app_q1_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></div>
+          <div class="field"><label class="field-label">Required?</label><select name="custom_app_q1_req"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+        </div>
+        <div class="row row-3 field-mb">
+          <div class="field"><label class="field-label">Question 2</label><input type="text" name="custom_app_q2" placeholder="Question text…" /></div>
+          <div class="field"><label class="field-label">Answer type</label><select name="custom_app_q2_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></div>
+          <div class="field"><label class="field-label">Required?</label><select name="custom_app_q2_req"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+        </div>
+        <div class="row row-3">
+          <div class="field"><label class="field-label">Question 3</label><input type="text" name="custom_app_q3" placeholder="Question text…" /></div>
+          <div class="field"><label class="field-label">Answer type</label><select name="custom_app_q3_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></div>
+          <div class="field"><label class="field-label">Required?</label><select name="custom_app_q3_req"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+        </div>
+      </div>
+      <hr class="divider" />
+      <div class="field">
+        <label class="field-label">Bank connectivity — borrower communication</label>
+        <div class="section-note" style="margin-bottom:8px;">Borrowers must connect their business bank account via Plaid as part of the application. Would you like help with borrower-facing language explaining this step?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="plaid_language" value="Yes — please provide suggested language / FAQ for our borrowers" /> Yes — please provide suggested language / FAQ for our borrowers</label>
+          <label class="check-item"><input type="radio" name="plaid_language" value="No — we'll handle this ourselves" /> No — we'll handle this ourselves</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Technology Comfort &amp; Change Management</div>
+      <div class="field-mb">
+        <div class="field-label" style="font-weight:500;color:#333;margin-bottom:8px;">How would you describe your team's comfort level with adopting new technology?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="tech_comfort" value="Very comfortable — we adopt new tools regularly" /> Very comfortable — we adopt new tools regularly</label>
+          <label class="check-item"><input type="radio" name="tech_comfort" value="Moderately comfortable — we've done this before with some friction" /> Moderately comfortable — we've done this before with some friction</label>
+          <label class="check-item"><input type="radio" name="tech_comfort" value="Some hesitation — change takes time for our team" /> Some hesitation — change takes time for our team</label>
+          <label class="check-item"><input type="radio" name="tech_comfort" value="Significant hesitation — this will require careful change management" /> Significant hesitation — this will require careful change management</label>
+        </div>
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">Who on your team will use Ned day-to-day? (role titles are fine)</label>
+        <input type="text" name="team_users" placeholder="e.g. Loan officers, underwriters, portfolio manager" />
+      </div>
+      <div class="field">
+        <label class="field-label">Is there anything specific about your team or borrowers that we should know as we plan training and rollout?</label>
+        <textarea name="change_mgmt_notes" placeholder="e.g. Staff has limited tech experience, borrowers are Spanish-speaking, we have a hard go-live deadline…"></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Confirmation</div>
+      <div class="section-note">By submitting this form, you are providing Ned with the information needed to configure your loan program(s) on the platform. Ned will share a configuration summary for your review and approval before any program goes live.</div>
+      <div class="row row-3">
+        <div class="field"><label class="field-label">Completed by (name)</label><input type="text" name="completed_by" placeholder="Full name" /></div>
+        <div class="field"><label class="field-label">Title</label><input type="text" name="completed_by_title" placeholder="Title" /></div>
+        <div class="field"><label class="field-label">Date</label><input type="date" name="completed_date" /></div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button type="button" class="btn btn-back" onclick="prevStep()">← Back</button>
+      <button type="submit" class="btn btn-submit">Submit intake →</button>
+    </div>
+
+    <div id="thanks">
+      <h2>Thanks for submitting!</h2>
+      <p>Camille will confirm receipt and follow up within 2 business days.<br />Total time from completed intake to go-live: typically 3–6 weeks for full implementation, 1–2 weeks for Spotlight.</p>
+    </div>
+  </div>
+
+  <!-- Navigation (shown on all steps except last) -->
+  <div class="nav" id="main-nav">
+    <button type="button" class="btn btn-back" onclick="prevStep()" id="btn-back">← Back</button>
+    <button type="button" class="btn btn-next" onclick="nextStep()" id="btn-next">Next →</button>
+  </div>
 
   </form>
 </div>
+
 <script>
-  document.querySelector('form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    fetch(this.action, { method: 'POST', body: new FormData(this), headers: { 'Accept': 'application/json' } })
-      .then(r => { if (r.ok) { this.style.display='none'; document.getElementById('thanks').style.display='block'; } });
-  });
+const TOTAL_STEPS = 9;
+const STEP_NAMES = [
+  "Your Organization",
+  "Lending Operation",
+  "Use Case & Goals",
+  "Program Overview & Mechanics",
+  "Eligibility: Revenue, Cash Flow & Business",
+  "Eligibility: Owner/Credit & Priority Matrix",
+  "Required Documents & Credit Policy",
+  "Legal Documents",
+  "Borrower Experience & Readiness"
+];
+
+let current = 1;
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  document.getElementById('step-label').textContent = 'Step ' + n + ' of ' + TOTAL_STEPS;
+  document.getElementById('step-name-label').textContent = STEP_NAMES[n - 1];
+  document.getElementById('progress-fill').style.width = Math.round((n / TOTAL_STEPS) * 100) + '%';
+  document.getElementById('btn-back').style.visibility = n === 1 ? 'hidden' : 'visible';
+  const mainNav = document.getElementById('main-nav');
+  mainNav.style.display = n === TOTAL_STEPS ? 'none' : 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep() {
+  if (current < TOTAL_STEPS) { current++; showStep(current); }
+}
+
+function prevStep() {
+  if (current > 1) { current--; showStep(current); }
+}
+
+function setTrack(track) {
+  document.querySelectorAll('.track-a-only').forEach(el => el.style.display = track === 'a' ? 'block' : 'none');
+  document.querySelectorAll('.track-b-only').forEach(el => el.style.display = track === 'b' ? 'block' : 'none');
+}
+
+// Handle form submission
+document.getElementById('intake-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  fetch(this.action, {
+    method: 'POST',
+    body: new FormData(this),
+    headers: { 'Accept': 'application/json' }
+  }).then(r => {
+    if (r.ok) {
+      document.getElementById('intake-form').style.display = 'none';
+      document.querySelector('.progress-wrap').style.display = 'none';
+      document.getElementById('thanks').style.display = 'block';
+    }
+  }).catch(() => alert('Something went wrong. Please email camille@nedhelps.com directly.'));
+});
+
+showStep(1);
 </script>
 </body>
 </html>
