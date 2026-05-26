@@ -13,251 +13,77 @@
     background: #f5f4f0;
     padding: 40px 20px 80px;
   }
-  .page {
-    max-width: 680px;
-    margin: 0 auto;
-  }
-  .header {
-    margin-bottom: 36px;
-  }
-  .header-logo {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-    color: #1a1a1a;
-    margin-bottom: 6px;
-  }
-  .header-sub {
-    font-size: 13px;
-    color: #666;
-  }
-  .section {
-    background: #fff;
-    border: 1px solid #e5e3de;
-    border-radius: 10px;
-    padding: 24px;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #888;
-    margin-bottom: 18px;
-  }
-  .row {
-    display: grid;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
+  .page { max-width: 680px; margin: 0 auto; }
+  .header { margin-bottom: 36px; }
+  .header-logo { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: #1a1a1a; margin-bottom: 6px; }
+  .header-sub { font-size: 13px; color: #666; }
+  .section { background: #fff; border: 1px solid #e5e3de; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 18px; }
+  .row { display: grid; gap: 12px; margin-bottom: 14px; }
   .row-2 { grid-template-columns: 1fr 1fr; }
   .row-3 { grid-template-columns: 1fr 1fr 1fr; }
   .field { display: flex; flex-direction: column; gap: 5px; }
-  label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #555;
+  label { font-size: 12px; font-weight: 500; color: #555; }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea {
+    width: 100%; padding: 8px 10px; font-size: 13px; font-family: inherit; color: #1a1a1a;
+    background: #fff; border: 1px solid #d8d5cf; border-radius: 6px; outline: none;
+    transition: border-color 0.15s; -webkit-appearance: none;
   }
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="date"],
-  input[type="number"],
-  select,
-  textarea {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-family: inherit;
-    color: #1a1a1a;
-    background: #fff;
-    border: 1px solid #d8d5cf;
-    border-radius: 6px;
-    outline: none;
-    transition: border-color 0.15s;
-    -webkit-appearance: none;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: #1a1a1a;
-  }
+  input:focus, select:focus, textarea:focus { border-color: #1a1a1a; }
   textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
   select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-  .checkgroup {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 16px;
-    margin-top: 4px;
-  }
+  .checkgroup { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 4px; }
   .checkgroup.col-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 13px;
-    color: #333;
-    cursor: pointer;
-  }
-  .check-item input[type="checkbox"],
-  .check-item input[type="radio"] {
-    width: 15px;
-    height: 15px;
-    min-width: 15px;
-    accent-color: #1a1a1a;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-  }
-  .track-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 0;
-  }
-  .track-option {
-    border: 1.5px solid #e5e3de;
-    border-radius: 8px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .track-option:has(input:checked) {
-    border-color: #1a1a1a;
-    background: #fafaf9;
-  }
-  .track-option input[type="radio"] {
-    display: none;
-  }
-  .track-name {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 3px;
-  }
-  .track-desc {
-    font-size: 12px;
-    color: #777;
-    line-height: 1.4;
-  }
-  .divider {
-    border: none;
-    border-top: 1px solid #f0ede8;
-    margin: 18px 0;
-  }
-  .field-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
-    display: block;
-  }
-  .submit-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 24px;
-  }
-  .submit-note {
-    font-size: 12px;
-    color: #888;
-  }
-  .btn-submit {
-    background: #1a1a1a;
-    color: #fff;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
+  .check-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #333; cursor: pointer; }
+  .check-item input[type="checkbox"], .check-item input[type="radio"] { width: 15px; height: 15px; min-width: 15px; accent-color: #1a1a1a; cursor: pointer; border: none; padding: 0; }
+  .track-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+  .track-option { border: 1.5px solid #e5e3de; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .track-option:has(input:checked) { border-color: #1a1a1a; background: #fafaf9; }
+  .track-option input[type="radio"] { display: none; }
+  .track-name { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+  .track-desc { font-size: 12px; color: #777; line-height: 1.4; }
+  .divider { border: none; border-top: 1px solid #f0ede8; margin: 18px 0; }
+  .field-label { font-size: 13px; font-weight: 500; color: #333; margin-bottom: 8px; display: block; }
+  .submit-row { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+  .submit-note { font-size: 12px; color: #888; }
+  .btn-submit { background: #1a1a1a; color: #fff; border: none; padding: 10px 24px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; }
   .btn-submit:hover { background: #333; }
-  .inline-pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .field-hint {
-    font-size: 11px;
-    color: #999;
-    margin-top: 2px;
-  }
   @media (max-width: 540px) {
-    .row-2, .row-3, .track-selector, .inline-pair, .checkgroup, .checkgroup.col-3 {
-      grid-template-columns: 1fr;
-    }
+    .row-2, .row-3, .track-selector, .checkgroup, .checkgroup.col-3 { grid-template-columns: 1fr; }
     .submit-row { flex-direction: column; gap: 12px; align-items: flex-start; }
   }
 </style>
 </head>
 <body>
 <div class="page">
-
   <div class="header">
     <div class="header-logo">⚡ Ned — Customer Intake</div>
     <div class="header-sub">Review, correct anything pre-filled, and complete open sections. Return to <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a;">camille@nedhelps.com</a> within 5 business days.</div>
   </div>
-
   <form>
-
-    <!-- 1. Organization -->
     <div class="section">
       <div class="section-title">1 · Your Organization</div>
       <div class="row row-2">
-        <div class="field">
-          <label for="org-name">Organization name (+ DBA if any)</label>
-          <input type="text" id="org-name" placeholder="Acme Lending LLC" />
-        </div>
-        <div class="field">
-          <label for="org-ein">EIN / Tax ID</label>
-          <input type="text" id="org-ein" placeholder="12-3456789" />
-        </div>
+        <div class="field"><label for="org-name">Organization name (+ DBA if any)</label><input type="text" id="org-name" placeholder="Acme Lending LLC" /></div>
+        <div class="field"><label for="org-ein">EIN / Tax ID</label><input type="text" id="org-ein" placeholder="12-3456789" /></div>
       </div>
       <div class="row row-3">
-        <div class="field">
-          <label for="contact-name">Primary contact — name &amp; title</label>
-          <input type="text" id="contact-name" placeholder="Jane Smith, VP Lending" />
-        </div>
-        <div class="field">
-          <label for="contact-email">Email</label>
-          <input type="email" id="contact-email" placeholder="jane@example.org" />
-        </div>
-        <div class="field">
-          <label for="contact-phone">Phone</label>
-          <input type="tel" id="contact-phone" placeholder="(555) 000-0000" />
-        </div>
+        <div class="field"><label for="contact-name">Primary contact — name &amp; title</label><input type="text" id="contact-name" placeholder="Jane Smith, VP Lending" /></div>
+        <div class="field"><label for="contact-email">Email</label><input type="email" id="contact-email" placeholder="jane@example.org" /></div>
+        <div class="field"><label for="contact-phone">Phone</label><input type="tel" id="contact-phone" placeholder="(555) 000-0000" /></div>
       </div>
       <div class="row row-2">
-        <div class="field">
-          <label for="org-location">City, State</label>
-          <input type="text" id="org-location" placeholder="Chicago, IL" />
-        </div>
-        <div class="field">
-          <label for="billing-contact">Billing contact (if different)</label>
-          <input type="text" id="billing-contact" placeholder="Name / email" />
-        </div>
+        <div class="field"><label for="org-location">City, State</label><input type="text" id="org-location" placeholder="Chicago, IL" /></div>
+        <div class="field"><label for="billing-contact">Billing contact (if different)</label><input type="text" id="billing-contact" placeholder="Name / email" /></div>
       </div>
     </div>
-
-    <!-- 2. Product Track -->
     <div class="section">
       <div class="section-title">2 · Product Track</div>
       <div class="track-selector">
-        <label class="track-option">
-          <input type="radio" name="track" value="spotlight" checked />
-          <div class="track-name">Track A — Spotlight</div>
-          <div class="track-desc">Borrower pre-qualification and / or portfolio monitoring</div>
-        </label>
-        <label class="track-option">
-          <input type="radio" name="track" value="full" />
-          <div class="track-name">Track B — Full Platform</div>
-          <div class="track-desc">Source, Flow, and Pulse — full lending platform implementation</div>
-        </label>
+        <label class="track-option"><input type="radio" name="track" value="spotlight" checked /><div class="track-name">Track A — Spotlight</div><div class="track-desc">Borrower pre-qualification and / or portfolio monitoring</div></label>
+        <label class="track-option"><input type="radio" name="track" value="full" /><div class="track-name">Track B — Full Platform</div><div class="track-desc">Source, Flow, and Pulse — full lending platform implementation</div></label>
       </div>
-
       <hr class="divider" />
-
       <span class="field-label">Primary use case (select all that apply)</span>
       <div class="checkgroup">
         <label class="check-item"><input type="checkbox" /> Pre-qualifying new applicants</label>
@@ -269,30 +95,14 @@
         <label class="check-item"><input type="checkbox" /> Expand to new borrowers / geographies</label>
         <label class="check-item"><input type="checkbox" /> Better portfolio visibility</label>
       </div>
-
       <hr class="divider" />
-
       <div class="row row-2">
-        <div class="field">
-          <label for="go-live">Target go-live date</label>
-          <input type="date" id="go-live" />
-        </div>
-        <div class="field">
-          <label for="ned-scope">Is Ned replacing or complementing existing systems?</label>
-          <select id="ned-scope">
-            <option value="">Select...</option>
-            <option>Replacing</option>
-            <option>Complementing</option>
-            <option>Both</option>
-          </select>
-        </div>
+        <div class="field"><label for="go-live">Target go-live date</label><input type="date" id="go-live" /></div>
+        <div class="field"><label for="ned-scope">Is Ned replacing or complementing existing systems?</label><select id="ned-scope"><option value="">Select...</option><option>Replacing</option><option>Complementing</option><option>Both</option></select></div>
       </div>
     </div>
-
-    <!-- 3. Lending Operation -->
     <div class="section">
       <div class="section-title">3 · Your Lending Operation</div>
-
       <span class="field-label">Loan types offered (select all that apply)</span>
       <div class="checkgroup col-3" style="margin-bottom:16px;">
         <label class="check-item"><input type="checkbox" /> Term loans</label>
@@ -302,198 +112,65 @@
         <label class="check-item"><input type="checkbox" /> SBA-backed</label>
         <label class="check-item"><input type="checkbox" /> Construction / real estate</label>
       </div>
-
-      <div class="field" style="margin-bottom:14px;">
-        <label for="borrower-profile">Typical borrowers</label>
-        <input type="text" id="borrower-profile" placeholder="e.g. small businesses in food & beverage, 2–5 years old, $100K–$500K revenue" />
-      </div>
-
+      <div class="field" style="margin-bottom:14px;"><label for="borrower-profile">Typical borrowers</label><input type="text" id="borrower-profile" placeholder="e.g. small businesses in food & beverage, 2–5 years old, $100K–$500K revenue" /></div>
       <div class="row row-3">
-        <div class="field">
-          <label for="book-dollars">Loan book — total outstanding</label>
-          <input type="text" id="book-dollars" placeholder="$0,000,000" />
-        </div>
-        <div class="field">
-          <label for="book-borrowers">Active borrowers</label>
-          <input type="number" id="book-borrowers" placeholder="0" min="0" />
-        </div>
-        <div class="field">
-          <label for="geography">Geographic footprint</label>
-          <input type="text" id="geography" placeholder="e.g. IL, TX, Nationwide" />
-        </div>
+        <div class="field"><label for="book-dollars">Loan book — total outstanding</label><input type="text" id="book-dollars" placeholder="$0,000,000" /></div>
+        <div class="field"><label for="book-borrowers">Active borrowers</label><input type="number" id="book-borrowers" placeholder="0" min="0" /></div>
+        <div class="field"><label for="geography">Geographic footprint</label><input type="text" id="geography" placeholder="e.g. IL, TX, Nationwide" /></div>
       </div>
-
-      <div class="field" style="margin-bottom:14px;">
-        <label for="current-systems">Current systems (LOS, CRM, servicing, etc.)</label>
-        <input type="text" id="current-systems" placeholder="e.g. Salesforce, Fundingo, Excel" />
-      </div>
-
-      <div class="field">
-        <label for="challenges">Top 1–2 operational challenges right now</label>
-        <textarea id="challenges" placeholder="e.g. Manual underwriting takes too long, hard to monitor portfolio health…"></textarea>
-      </div>
+      <div class="field" style="margin-bottom:14px;"><label for="current-systems">Current systems (LOS, CRM, servicing, etc.)</label><input type="text" id="current-systems" placeholder="e.g. Salesforce, Fundingo, Excel" /></div>
+      <div class="field"><label for="challenges">Top 1–2 operational challenges right now</label><textarea id="challenges" placeholder="e.g. Manual underwriting takes too long…"></textarea></div>
     </div>
-
-    <!-- 4. Loan Program -->
     <div class="section">
       <div class="section-title">4 · Loan Program Configuration</div>
-      <div class="field-hint" style="margin-bottom:14px; font-size:12px; color:#666;">Complete one entry per program. Add additional sheets for multiple programs.</div>
-
       <div class="row row-2">
-        <div class="field">
-          <label for="program-name">Program name (as borrowers see it)</label>
-          <input type="text" id="program-name" placeholder="Working Capital Loan" />
-        </div>
-        <div class="field">
-          <label for="program-type">Loan type</label>
-          <select id="program-type">
-            <option value="">Select...</option>
-            <option>Term loan</option>
-            <option>Revenue-based repayment</option>
-            <option>Line of credit</option>
-            <option>Other</option>
-          </select>
-        </div>
+        <div class="field"><label for="program-name">Program name (as borrowers see it)</label><input type="text" id="program-name" placeholder="Working Capital Loan" /></div>
+        <div class="field"><label for="program-type">Loan type</label><select id="program-type"><option value="">Select...</option><option>Term loan</option><option>Revenue-based repayment</option><option>Line of credit</option><option>Other</option></select></div>
       </div>
-
       <div class="row row-2">
-        <div class="field">
-          <label for="loan-min">Loan amount — minimum</label>
-          <input type="text" id="loan-min" placeholder="$5,000" />
-        </div>
-        <div class="field">
-          <label for="loan-max">Loan amount — maximum</label>
-          <input type="text" id="loan-max" placeholder="$150,000" />
-        </div>
+        <div class="field"><label for="loan-min">Loan amount — minimum</label><input type="text" id="loan-min" placeholder="$5,000" /></div>
+        <div class="field"><label for="loan-max">Loan amount — maximum</label><input type="text" id="loan-max" placeholder="$150,000" /></div>
       </div>
-
       <div class="row row-3">
-        <div class="field">
-          <label for="term-min">Term — min (months)</label>
-          <input type="number" id="term-min" placeholder="6" min="1" />
-        </div>
-        <div class="field">
-          <label for="term-max">Term — max (months)</label>
-          <input type="number" id="term-max" placeholder="36" min="1" />
-        </div>
-        <div class="field">
-          <label for="repay-freq">Repayment frequency</label>
-          <select id="repay-freq">
-            <option value="">Select...</option>
-            <option>Weekly</option>
-            <option>Bi-weekly</option>
-            <option>Monthly</option>
-            <option>Revenue-based</option>
-          </select>
-        </div>
+        <div class="field"><label for="term-min">Term — min (months)</label><input type="number" id="term-min" placeholder="6" min="1" /></div>
+        <div class="field"><label for="term-max">Term — max (months)</label><input type="number" id="term-max" placeholder="36" min="1" /></div>
+        <div class="field"><label for="repay-freq">Repayment frequency</label><select id="repay-freq"><option value="">Select...</option><option>Weekly</option><option>Bi-weekly</option><option>Monthly</option><option>Revenue-based</option></select></div>
       </div>
-
       <div class="row row-2">
-        <div class="field">
-          <label for="rate">Interest rate (APR) or factor rate</label>
-          <input type="text" id="rate" placeholder="e.g. 12% APR or 1.15x" />
-        </div>
-        <div class="field">
-          <label for="origination-fee">Origination / closing fee (if any)</label>
-          <input type="text" id="origination-fee" placeholder="e.g. 2% or $500, or None" />
-        </div>
+        <div class="field"><label for="rate">Interest rate (APR) or factor rate</label><input type="text" id="rate" placeholder="e.g. 12% APR or 1.15x" /></div>
+        <div class="field"><label for="origination-fee">Origination / closing fee (if any)</label><input type="text" id="origination-fee" placeholder="e.g. 2% or $500, or None" /></div>
       </div>
-
       <hr class="divider" />
       <span class="field-label">Key eligibility criteria</span>
-
       <div class="row row-3">
-        <div class="field">
-          <label for="min-revenue">Min annual revenue</label>
-          <input type="text" id="min-revenue" placeholder="$50,000" />
-        </div>
-        <div class="field">
-          <label for="min-tib">Min time in business</label>
-          <input type="text" id="min-tib" placeholder="2 years" />
-        </div>
-        <div class="field">
-          <label for="min-credit">Min credit score (or N/A)</label>
-          <input type="text" id="min-credit" placeholder="620 or N/A" />
-        </div>
+        <div class="field"><label for="min-revenue">Min annual revenue</label><input type="text" id="min-revenue" placeholder="$50,000" /></div>
+        <div class="field"><label for="min-tib">Min time in business</label><input type="text" id="min-tib" placeholder="2 years" /></div>
+        <div class="field"><label for="min-credit">Min credit score (or N/A)</label><input type="text" id="min-credit" placeholder="620 or N/A" /></div>
       </div>
-
       <div class="row row-2">
-        <div class="field">
-          <label for="geo-restrict">Geographic restriction (if any)</label>
-          <input type="text" id="geo-restrict" placeholder="e.g. Illinois only, or None" />
-        </div>
-        <div class="field">
-          <label for="mission-restrict">Mission / demographic focus (if any)</label>
-          <input type="text" id="mission-restrict" placeholder="e.g. minority-owned, women-owned, or None" />
-        </div>
+        <div class="field"><label for="geo-restrict">Geographic restriction (if any)</label><input type="text" id="geo-restrict" placeholder="e.g. Illinois only, or None" /></div>
+        <div class="field"><label for="mission-restrict">Mission / demographic focus (if any)</label><input type="text" id="mission-restrict" placeholder="e.g. minority-owned, or None" /></div>
       </div>
-
-      <div class="field">
-        <label for="other-criteria">Any other eligibility notes</label>
-        <textarea id="other-criteria" placeholder="e.g. Must have active business checking, no open bankruptcies…" style="min-height:56px;"></textarea>
-      </div>
-
+      <div class="field"><label for="other-criteria">Any other eligibility notes</label><textarea id="other-criteria" style="min-height:56px;" placeholder="e.g. Must have active business checking, no open bankruptcies…"></textarea></div>
       <hr class="divider" />
-
       <div class="row row-2">
-        <div class="field">
-          <label for="num-programs">Number of loan programs to configure</label>
-          <input type="number" id="num-programs" placeholder="1" min="1" />
-        </div>
-        <div class="field">
-          <label for="program-funded">Specific grant / capital source with reporting requirements?</label>
-          <select id="program-funded">
-            <option value="">Select...</option>
-            <option>No</option>
-            <option>Yes — will describe in notes</option>
-          </select>
-        </div>
+        <div class="field"><label for="num-programs">Number of loan programs to configure</label><input type="number" id="num-programs" placeholder="1" min="1" /></div>
+        <div class="field"><label for="program-funded">Specific grant / capital source with reporting requirements?</label><select id="program-funded"><option value="">Select...</option><option>No</option><option>Yes — will describe in notes</option></select></div>
       </div>
     </div>
-
-    <!-- 5. Team & Readiness -->
     <div class="section">
       <div class="section-title">5 · Team &amp; Readiness</div>
-
-      <div class="field" style="margin-bottom:14px;">
-        <label for="team-users">Who will use Ned day-to-day? (role titles)</label>
-        <input type="text" id="team-users" placeholder="e.g. Loan officers, underwriters, portfolio manager" />
-      </div>
-
+      <div class="field" style="margin-bottom:14px;"><label for="team-users">Who will use Ned day-to-day? (role titles)</label><input type="text" id="team-users" placeholder="e.g. Loan officers, underwriters, portfolio manager" /></div>
       <div class="row row-2">
-        <div class="field">
-          <label for="tech-comfort">Team's comfort with new tech</label>
-          <select id="tech-comfort">
-            <option value="">Select...</option>
-            <option>Very comfortable — adopt new tools regularly</option>
-            <option>Moderately comfortable — some friction expected</option>
-            <option>Some hesitation — change takes time</option>
-            <option>Significant hesitation — careful rollout needed</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="year1-book">% of loan book on Ned in Year 1</label>
-          <select id="year1-book">
-            <option value="">Select...</option>
-            <option>Less than 25%</option>
-            <option>25–50%</option>
-            <option>50–75%</option>
-            <option>75–100%</option>
-          </select>
-        </div>
+        <div class="field"><label for="tech-comfort">Team's comfort with new tech</label><select id="tech-comfort"><option value="">Select...</option><option>Very comfortable — adopt new tools regularly</option><option>Moderately comfortable — some friction expected</option><option>Some hesitation — change takes time</option><option>Significant hesitation — careful rollout needed</option></select></div>
+        <div class="field"><label for="year1-book">% of loan book on Ned in Year 1</label><select id="year1-book"><option value="">Select...</option><option>Less than 25%</option><option>25–50%</option><option>50–75%</option><option>75–100%</option></select></div>
       </div>
-
-      <div class="field">
-        <label for="additional-notes">Anything else we should know before configuration?</label>
-        <textarea id="additional-notes" placeholder="Plaid connectivity concerns, special borrower populations, hard cutover dates, compliance contacts…"></textarea>
-      </div>
+      <div class="field"><label for="additional-notes">Anything else we should know before configuration?</label><textarea id="additional-notes" placeholder="Plaid connectivity concerns, special borrower populations, hard cutover dates…"></textarea></div>
     </div>
-
     <div class="submit-row">
       <div class="submit-note">Return to <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a; text-decoration:none; border-bottom:1px solid #ccc;">camille@nedhelps.com</a> · Ned will follow up within 2 business days.</div>
       <button type="submit" class="btn-submit">Submit intake →</button>
     </div>
-
   </form>
 </div>
 </body>
