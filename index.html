@@ -283,7 +283,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 
     <div class="section">
       <div class="section-title">2.4</div>
-      <div class="section-note">Describe your lending team structure — Do you have a dedicated person/team? </div>
+      <div class="section-note">Describe your lending team structure:</div>
       <table class="form-table">
         <thead>
           <tr>
@@ -294,7 +294,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
         </thead>
         <tbody>
           <tr>
-            <td>Loan origination / intake </td>
+            <td>Loan origination / intake — Do you have a dedicated person/team?</td>
             <td><div class="yn"><label><input type="radio" name="team_origination" value="Y" /> Y</label><label><input type="radio" name="team_origination" value="N" /> N</label></div></td>
             <td><input type="text" name="team_origination_notes" /></td>
           </tr>
@@ -1721,13 +1721,16 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
   <!-- Thank you -->
   <div id="thanks" style="display:none;text-align:center;padding:48px 24px;background:#fff;border:1px solid #e5e3de;border-radius:10px;">
     <h2 style="font-size:22px;font-weight:600;margin-bottom:12px;">You're done with the Intake Questionnaire!</h2>
-    <p style="font-size:14px;color:#666;line-height:1.7;">Please also complete the Loan Program Configuration Template for each program you'll run on Ned.</p>
-    <p style="margin-top:16px;font-size:13px;color:#888;">We also sent a link to your email — click it any time to check your onboarding status.</p>
+    <p style="font-size:14px;color:#666;line-height:1.7;">Thank you — the Ned team will be in touch shortly.</p>
   </div>
 
 </div>
 
 <script>
+// ── Google Sheets webhook URL (paste your deployed Apps Script URL here) ──
+const SHEETS_URL = '';  // ← e.g. 'https://script.google.com/macros/s/ABC123.../exec'
+// ─────────────────────────────────────────────────────────
+
 // ── Supabase config ───────────────────────────────────────
 const SUPABASE_URL  = 'https://zuxxlbwicobgqsxbzirm.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1eHhsYndpY29iZ3FzeGJ6aXJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzE2ODgsImV4cCI6MjA5NTQ0NzY4OH0.9ZTU-qKbiQAqGz2EcS71jX7xN7fbrI8nea7HFuEzoN0';
@@ -1818,11 +1821,18 @@ document.getElementById('intake-form').addEventListener('submit', async function
     });
     if (error) throw error;
 
-    if (raw.email) {
-      await db.auth.signInWithOtp({
-        email: raw.email,
-        options: { emailRedirectTo: 'https://joshned-sys.github.io/portal.html' }
-      });
+    // Send to Google Sheets
+    if (SHEETS_URL) {
+      try {
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(raw)
+        });
+      } catch(sheetErr) {
+        // Silent fail — Supabase already has the data
+      }
     }
 
     document.getElementById('intake-form').style.display = 'none';
