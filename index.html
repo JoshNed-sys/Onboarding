@@ -90,6 +90,33 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 .doc-table .yn label { display:flex; align-items:center; gap:4px; cursor:pointer; }
 .doc-table .yn input { width:13px; height:13px; accent-color:#1a1a1a; }
 
+/* Priority Matrix Table */
+.matrix-table { width:100%; border-collapse:collapse; font-size:13px; }
+.matrix-table th {
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  text-align: center;
+  border-bottom: 2px solid #e5e3de;
+}
+.matrix-table th:first-child { text-align: left; min-width: 240px; padding-left: 0; }
+.matrix-table td {
+  padding: 10px 14px;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0ede8;
+  font-size: 13px;
+  color: #222;
+}
+.matrix-table td:first-child { text-align: left; padding-left: 0; }
+.matrix-table tbody tr:nth-child(even) td { background: #faf9f7; }
+.matrix-table tbody tr:hover td { background: #f3f1ec; }
+.matrix-table input[type="radio"] { width: 15px; height: 15px; accent-color: #1a1a1a; cursor: pointer; }
+
 /* Navigation */
 .nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
 .btn { padding: 10px 22px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.15s; }
@@ -248,7 +275,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 
     <div class="section">
       <div class="section-title">2.4</div>
-      <div class="section-note">Describe your lending team structure - Do you have a dedicated person/team?</div>
+      <div class="section-note">Describe your lending team structure -  — Do you have a dedicated person/team? </div>
       <table class="form-table">
         <thead>
           <tr>
@@ -259,7 +286,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
         </thead>
         <tbody>
           <tr>
-            <td>Loan origination / intake</td>
+            <td>Loan origination / intake </td>
             <td><div class="yn"><label><input type="radio" name="team_origination" value="Y" /> Y</label><label><input type="radio" name="team_origination" value="N" /> N</label></div></td>
             <td><input type="text" name="team_origination_notes" /></td>
           </tr>
@@ -1267,7 +1294,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
       <div class="section-title">3F — Custom / Loan-Product-Specific Criteria</div>
       <div class="section-note">Use this section for any eligibility criteria unique to this loan product that don't fit the categories above.</div>
 
-      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3F.1   Do you have any custom yes/no eligibility questions you'd like to ask borrowers? (or N/A) &nbsp;</div>
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3F.1 &nbsp; Do you have any custom yes/no eligibility questions you'd like to ask borrowers? (or N/A)</div>
       <div class="field-hint" style="margin-bottom:10px;">(e.g., "Are you currently enrolled in a business development loan product?" or "Do you have a signed lease for your business location?")</div>
       <table class="form-table" style="margin-bottom:16px;">
         <thead><tr><th>Question</th><th style="width:120px;">Required Answer</th><th style="width:120px;">Hard cutoff or soft flag?</th><th style="width:160px;">Priority weight</th></tr></thead>
