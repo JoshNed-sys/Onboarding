@@ -1168,10 +1168,23 @@ function showStep(n) {
   document.getElementById('btn-back').style.visibility = n === 1 ? 'hidden' : 'visible';
   const mainNav = document.getElementById('main-nav');
   mainNav.style.display = n === TOTAL_STEPS ? 'none' : 'flex';
+  // Re-apply track visibility whenever step changes
+  const trackSelected = document.querySelector('input[name="track"]:checked');
+  if (trackSelected) {
+    const t = trackSelected.value.includes('Track A') ? 'a' : 'b';
+    setTrack(t);
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function nextStep() {
+  if (current === 1) {
+    const trackSelected = document.querySelector('input[name="track"]:checked');
+    if (!trackSelected) {
+      alert('Please select Track A or Track B before continuing.');
+      return;
+    }
+  }
   if (current < TOTAL_STEPS) { current++; showStep(current); }
 }
 
