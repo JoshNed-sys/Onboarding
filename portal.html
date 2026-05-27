@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ned — Your Onboarding Status</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f4f0; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 48px 20px 80px; }
+.page { width: 100%; max-width: 560px; }
+
+.logo { font-size: 17px; font-weight: 600; margin-bottom: 32px; }
+.logo span { color: #888; font-weight: 400; }
+
+/* Login card */
+.card { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 32px; }
+.card-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.card-sub { font-size: 13px; color: #666; margin-bottom: 24px; line-height: 1.5; }
+
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: #555; margin-bottom: 5px; }
+.field input { width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit; border: 1px solid #d8d5cf; border-radius: 7px; outline: none; transition: border-color 0.15s; }
+.field input:focus { border-color: #1a1a1a; }
+
+.btn-primary { width: 100%; padding: 11px; background: #1a1a1a; color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.btn-primary:hover { background: #333; }
+.btn-primary:disabled { background: #999; cursor: not-allowed; }
+
+.hint { font-size: 12px; color: #aaa; margin-top: 12px; text-align: center; line-height: 1.5; }
+
+/* Sent state */
+.sent-icon { font-size: 36px; margin-bottom: 14px; }
+.sent-title { font-size: 19px; font-weight: 600; margin-bottom: 8px; }
+.sent-desc { font-size: 13px; color: #666; line-height: 1.6; }
+.resend-btn { background: transparent; border: none; color: #1a1a1a; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: underline; margin-top: 16px; }
+
+/* Status page */
+.status-header { margin-bottom: 24px; }
+.status-org { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.status-meta { font-size: 13px; color: #888; }
+
+.status-card { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.status-card-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #999; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f0ede8; }
+
+/* Current status badge */
+.current-status { display: flex; align-items: center; gap: 12px; }
+.status-dot-lg { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.dot-new { background: #ccc; }
+.dot-review { background: #f59e0b; }
+.dot-configuring { background: #3b82f6; }
+.dot-live { background: #22c55e; }
+.dot-hold { background: #ef4444; }
+.status-name { font-size: 18px; font-weight: 600; }
+.status-updated { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 14px; }
+.tl-left { display: flex; flex-direction: column; align-items: center; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.tl-dot.done { background: #1a1a1a; }
+.tl-dot.active { background: #1a1a1a; box-shadow: 0 0 0 3px rgba(26,26,26,0.15); }
+.tl-dot.pending { background: #e5e3de; border: 2px solid #d0cdc7; }
+.tl-line { width: 1px; background: #e5e3de; flex: 1; min-height: 20px; margin: 3px 0; }
+.tl-item:last-child .tl-line { display: none; }
+.tl-right { padding-bottom: 18px; }
+.tl-label { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+.tl-label.pending { color: #bbb; }
+.tl-date { font-size: 11px; color: #aaa; margin-top: 1px; }
+
+/* Notes */
+.notes-box { background: #fafaf8; border: 1px solid #f0ede8; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.6; }
+.notes-empty { font-size: 13px; color: #bbb; font-style: italic; }
+
+/* Submission details */
+.detail-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.detail-label { font-size: 12px; color: #999; min-width: 130px; flex-shrink: 0; }
+.detail-value { font-size: 13px; color: #1a1a1a; }
+
+.logout-btn { background: transparent; border: 1px solid #e5e3de; border-radius: 6px; padding: 6px 14px; font-size: 12px; color: #888; font-family: inherit; cursor: pointer; margin-top: 24px; }
+.logout-btn:hover { background: #f5f3ef; }
+
+.loading { text-align: center; padding: 48px; color: #888; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="logo">⚡ Ned <span>/ Client Portal</span></div>
+  <div id="app"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zuxxlbwicobgqsxbzirm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1eHhsYndpY29iZ3FzeGJ6aXJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzE2ODgsImV4cCI6MjA5NTQ0NzY4OH0.9ZTU-qKbiQAqGz2EcS71jX7xN7fbrI8nea7HFuEzoN0';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const STAGES = ['New', 'In Review', 'Configuring', 'Live'];
+const STAGE_DESC = {
+  'New': 'Submission received — your intake form is in our queue.',
+  'In Review': 'Camille and the team are reviewing your submission.',
+  'Configuring': 'We\'re actively configuring your Ned environment.',
+  'Live': 'Your Ned platform is live and ready to use!'
+};
+const DOT_CLASS = { 'New':'dot-new', 'In Review':'dot-review', 'Configuring':'dot-configuring', 'Live':'dot-live', 'On Hold':'dot-hold' };
+
+const app = document.getElementById('app');
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(d) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+  catch(e) { return d; }
+}
+
+// ── Login view ────────────────────────────────────────────
+function showLogin(prefill = '') {
+  app.innerHTML = `
+    <div class="card">
+      <div class="card-title">Check your onboarding status</div>
+      <div class="card-sub">Enter the email you used when you submitted your intake form. We'll send you a secure link — no password needed.</div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="login-email" placeholder="you@yourorg.com" value="${esc(prefill)}" />
+      </div>
+      <button class="btn-primary" id="login-btn" onclick="sendLink()">Send me a link →</button>
+      <div class="hint">Check your spam folder if you don't see it within a minute.</div>
+    </div>
+  `;
+  document.getElementById('login-email').addEventListener('keydown', e => { if (e.key === 'Enter') sendLink(); });
+}
+
+async function sendLink() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email) return;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const { error } = await db.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.href.split('?')[0].split('#')[0] }
+  });
+  if (error) {
+    btn.disabled = false; btn.textContent = 'Send me a link →';
+    alert('Error: ' + error.message);
+    return;
+  }
+  showSent(email);
+}
+
+function showSent(email) {
+  app.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div class="sent-icon">✉️</div>
+      <div class="sent-title">Check your inbox</div>
+      <div class="sent-desc">We sent a link to <strong>${esc(email)}</strong>.<br />Click it to open your status page — it's valid for 1 hour.</div>
+      <button class="resend-btn" onclick="showLogin('${esc(email)}')">Use a different email</button>
+    </div>
+  `;
+}
+
+// ── Status view ───────────────────────────────────────────
+async function showStatus(user) {
+  app.innerHTML = '<div class="loading">Loading your status…</div>';
+
+  const { data, error } = await db
+    .from('intake_submissions')
+    .select('*')
+    .eq('email', user.email)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    app.innerHTML = `
+      <div class="card">
+        <div class="card-title">No submission found</div>
+        <div class="card-sub">We couldn't find an intake submission for <strong>${esc(user.email)}</strong>. If you think this is an error, email <a href="mailto:camille@nedhelps.com" style="color:#1a1a1a;">camille@nedhelps.com</a>.</div>
+        <button class="logout-btn" onclick="logout()">Sign out</button>
+      </div>
+    `;
+    return;
+  }
+
+  const sub = data[0];
+  const status = sub.status || 'New';
+  const stageIdx = STAGES.indexOf(status);
+  const fd = sub.form_data || {};
+
+  const timelineHTML = STAGES.map((stage, i) => {
+    const isDone = i < stageIdx;
+    const isActive = i === stageIdx;
+    const isPending = i > stageIdx;
+    return `
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot ${isDone ? 'done' : isActive ? 'active' : 'pending'}"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-label ${isPending ? 'pending' : ''}">${stage}${isActive ? ' <span style="font-size:11px;background:#1a1a1a;color:#fff;padding:1px 6px;border-radius:4px;vertical-align:middle;margin-left:4px;">Current</span>' : ''}</div>
+          ${isActive || isDone ? `<div class="tl-date">${isActive ? fmtDate(sub.updated_at || sub.created_at) : ''}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="status-header">
+      <div class="status-org">${esc(sub.org_name || 'Your Organization')}</div>
+      <div class="status-meta">Submitted ${fmtDate(sub.created_at)} · ${esc(sub.track || '')}</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-card-title">Current Status</div>
+      <div class="current-status">
+        <div class="status-dot-lg ${DOT_CLASS[status] || 'dot-new'}"></div>
+        <div>
+          <div class="status-name">${esc(status)}</div>
+          <div class="status-updated">${esc(STAGE_DESC[status] || '')}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-card-title">Progress</div>
+      <div class="timeline">${timelineHTML}</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-card-title">Notes from Ned</div>
+      ${sub.notes
+        ? `<div class="notes-box">${esc(sub.notes)}</div>`
+        : `<div class="notes-empty">No notes yet — your team will add updates here as your onboarding progresses.</div>`}
+    </div>
+
+    <div class="status-card">
+      <div class="status-card-title">Your Submission</div>
+      ${sub.contact_name ? `<div class="detail-row"><div class="detail-label">Contact</div><div class="detail-value">${esc(sub.contact_name)}</div></div>` : ''}
+      ${sub.email ? `<div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${esc(sub.email)}</div></div>` : ''}
+      ${sub.org_name ? `<div class="detail-row"><div class="detail-label">Organization</div><div class="detail-value">${esc(sub.org_name)}</div></div>` : ''}
+      ${sub.track ? `<div class="detail-row"><div class="detail-label">Track</div><div class="detail-value">${esc(sub.track)}</div></div>` : ''}
+      ${fd.program_name ? `<div class="detail-row"><div class="detail-label">Program</div><div class="detail-value">${esc(fd.program_name)}</div></div>` : ''}
+      ${fd.go_live_b || fd.go_live_a ? `<div class="detail-row"><div class="detail-label">Target go-live</div><div class="detail-value">${esc(fd.go_live_b || fd.go_live_a)}</div></div>` : ''}
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  `;
+}
+
+async function logout() {
+  await db.auth.signOut();
+  showLogin();
+}
+
+// ── Init ─────────────────────────────────────────────────
+async function init() {
+  app.innerHTML = '<div class="loading">Loading…</div>';
+
+  // Handle magic link redirect (Supabase processes the URL hash automatically)
+  const { data: { session } } = await db.auth.getSession();
+
+  if (session) {
+    showStatus(session.user);
+  } else {
+    showLogin();
+  }
+
+  // Listen for auth state changes (e.g. after magic link click)
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      showStatus(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      showLogin();
+    }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
