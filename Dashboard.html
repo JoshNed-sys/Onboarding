@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ned — Intake Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f4f0; min-height: 100vh; }
+
+/* Topbar */
+.topbar { background: #fff; border-bottom: 1px solid #e5e3de; padding: 13px 24px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
+.topbar-logo { font-weight: 600; font-size: 15px; flex: 1; }
+.view-toggle { display: flex; border: 1px solid #e5e3de; border-radius: 6px; overflow: hidden; }
+.view-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; background: #fff; border: none; cursor: pointer; color: #888; font-family: inherit; }
+.view-btn.active { background: #1a1a1a; color: #fff; }
+.icon-btn { padding: 6px 12px; background: transparent; border: 1px solid #e5e3de; border-radius: 6px; cursor: pointer; font-size: 12px; color: #666; font-family: inherit; }
+.icon-btn:hover { background: #f5f3ef; }
+
+/* Stats bar */
+.stats-bar { display: flex; background: #fff; border-bottom: 1px solid #e5e3de; }
+.stat { flex: 1; padding: 14px 20px; border-right: 1px solid #e5e3de; }
+.stat:last-child { border-right: none; }
+.stat-num { font-size: 24px; font-weight: 600; line-height: 1; }
+.stat-label { font-size: 11px; color: #999; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Main */
+.main { padding: 24px; }
+.state-msg { text-align: center; padding: 64px 20px; color: #888; font-size: 14px; }
+
+/* Pipeline */
+.pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.p-col { background: #fff; border: 1px solid #e5e3de; border-radius: 10px; overflow: hidden; min-height: 160px; }
+.p-col-hdr { padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0ede8; }
+.p-col-name { font-size: 12px; font-weight: 600; color: #444; }
+.p-col-count { font-size: 11px; background: #f0ede8; color: #777; padding: 2px 7px; border-radius: 99px; font-weight: 500; }
+.p-cards { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.card { border: 1px solid #e5e3de; border-radius: 8px; padding: 12px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; background: #fff; }
+.card:hover { border-color: #aaa; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+.card-org { font-weight: 600; font-size: 13px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-meta { font-size: 11px; color: #888; line-height: 1.5; }
+.track-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; margin-top: 6px; }
+.track-a { background: #e8f0fe; color: #1a4db5; }
+.track-b { background: #e8fdf0; color: #1a7a3c; }
+.p-empty { font-size: 12px; color: #ddd; text-align: center; padding: 24px 0; }
+
+/* Table */
+.table-wrap { background: #fff; border: 1px solid #e5e3de; border-radius: 10px; overflow: hidden; }
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th { text-align: left; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; padding: 11px 16px; border-bottom: 1px solid #e5e3de; background: #fafaf8; white-space: nowrap; }
+.tbl td { padding: 11px 16px; border-bottom: 1px solid #f5f3ef; font-size: 13px; vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td { background: #fafaf8; cursor: pointer; }
+.s-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 99px; }
+.s-new { background: #f0f0f0; color: #555; }
+.s-review { background: #fff3cd; color: #856404; }
+.s-configuring { background: #dde8fe; color: #1a4db5; }
+.s-live { background: #d4f5e2; color: #1a6b35; }
+.s-hold { background: #fde8e8; color: #b51a1a; }
+
+/* Overlay + panel */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.18); z-index: 200; }
+.overlay.open { display: block; }
+.panel { position: fixed; top: 0; right: 0; bottom: 0; width: 500px; background: #fff; border-left: 1px solid #e5e3de; overflow-y: auto; z-index: 201; transform: translateX(100%); transition: transform 0.22s ease; }
+.panel.open { transform: translateX(0); }
+.panel-hdr { padding: 18px 22px; border-bottom: 1px solid #e5e3de; display: flex; align-items: flex-start; gap: 12px; position: sticky; top: 0; background: #fff; z-index: 1; }
+.panel-hdr-info { flex: 1; min-width: 0; }
+.panel-org { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.panel-sub-txt { font-size: 12px; color: #888; margin-top: 2px; }
+.panel-close { padding: 5px 10px; background: transparent; border: 1px solid #e5e3de; border-radius: 6px; cursor: pointer; font-size: 12px; color: #666; font-family: inherit; flex-shrink: 0; }
+.panel-body { padding: 20px 22px; }
+.p-sec { margin-bottom: 22px; }
+.p-sec-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #999; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f0ede8; }
+.pf { margin-bottom: 10px; }
+.pf-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.pf-value { font-size: 13px; color: #1a1a1a; line-height: 1.5; }
+.pf-value.empty { color: #ccc; font-style: italic; }
+.divider { border: none; border-top: 1px solid #f0ede8; margin: 16px 0; }
+.ctrl-label { font-size: 11px; font-weight: 500; color: #555; margin-bottom: 5px; display: block; }
+.ctrl-select, .ctrl-textarea { width: 100%; padding: 8px 10px; font-size: 13px; font-family: inherit; border: 1px solid #d8d5cf; border-radius: 6px; background: #fff; }
+.ctrl-select:focus, .ctrl-textarea:focus { outline: none; border-color: #1a1a1a; }
+.ctrl-textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+.save-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.save-btn { padding: 8px 18px; background: #1a1a1a; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+.save-btn:hover { background: #333; }
+.save-fb { font-size: 12px; color: #888; }
+details > summary { font-size: 12px; color: #aaa; cursor: pointer; padding: 6px 0; user-select: none; }
+details pre { font-size: 11px; color: #555; margin-top: 8px; white-space: pre-wrap; background: #f9f8f5; padding: 12px; border-radius: 6px; max-height: 320px; overflow-y: auto; line-height: 1.5; }
+
+/* Password gate */
+.gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.gate-card { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 32px; width: 360px; }
+.gate-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.gate-desc { font-size: 13px; color: #666; margin-bottom: 24px; }
+.gate-input { width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit; border: 1px solid #d8d5cf; border-radius: 7px; margin-bottom: 12px; outline: none; }
+.gate-input:focus { border-color: #1a1a1a; }
+.gate-btn { width: 100%; padding: 10px; background: #1a1a1a; color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; }
+.gate-error { font-size: 12px; color: #c00; margin-top: 8px; }
+
+@media (max-width: 1100px) { .pipeline { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .pipeline { grid-template-columns: 1fr 1fr; } .panel { width: 100%; } }
+</style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div id="gate" class="gate">
+  <div class="gate-card">
+    <div class="gate-title">⚡ Ned Dashboard</div>
+    <div class="gate-desc">Internal use only. Enter the team password to continue.</div>
+    <input class="gate-input" type="password" id="gate-pw" placeholder="Password" />
+    <button class="gate-btn" onclick="checkGate()">Enter →</button>
+    <div class="gate-error" id="gate-err"></div>
+  </div>
+</div>
+
+<!-- Main app (hidden until authenticated) -->
+<div id="app" style="display:none;">
+  <div class="overlay" id="overlay" onclick="closePanel()"></div>
+  <div class="panel" id="detail-panel">
+    <div class="panel-hdr">
+      <div class="panel-hdr-info">
+        <div class="panel-org" id="p-org">—</div>
+        <div class="panel-sub-txt" id="p-sub">—</div>
+      </div>
+      <button class="panel-close" onclick="closePanel()">✕ Close</button>
+    </div>
+    <div class="panel-body" id="p-body"></div>
+  </div>
+
+  <div class="topbar">
+    <div class="topbar-logo">⚡ Ned — Intake Dashboard</div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vbtn-pipeline" onclick="setView('pipeline')">Pipeline</button>
+      <button class="view-btn" id="vbtn-table" onclick="setView('table')">Table</button>
+    </div>
+    <button class="icon-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="s-total">—</div><div class="stat-label">Total</div></div>
+    <div class="stat"><div class="stat-num" style="color:#555;" id="s-new">—</div><div class="stat-label">New</div></div>
+    <div class="stat"><div class="stat-num" style="color:#b06000;" id="s-review">—</div><div class="stat-label">In Review</div></div>
+    <div class="stat"><div class="stat-num" style="color:#1a4db5;" id="s-configuring">—</div><div class="stat-label">Configuring</div></div>
+    <div class="stat"><div class="stat-num" style="color:#1a7a3c;" id="s-live">—</div><div class="stat-label">Live</div></div>
+  </div>
+
+  <div class="main">
+    <div id="state-area" class="state-msg">Loading…</div>
+    <div id="view-pipeline" style="display:none;"><div class="pipeline" id="pipeline-board"></div></div>
+    <div id="view-table" style="display:none;">
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead><tr><th>Organization</th><th>Track</th><th>Contact</th><th>Email</th><th>Status</th><th>Submitted</th></tr></thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zuxxlbwicobgqsxbzirm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1eHhsYndpY29iZ3FzeGJ6aXJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzE2ODgsImV4cCI6MjA5NTQ0NzY4OH0.9ZTU-qKbiQAqGz2EcS71jX7xN7fbrI8nea7HFuEzoN0';
+const DASH_PASSWORD = 'ned2024'; // ← change this to your preferred password
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const STATUSES = ['New', 'In Review', 'Configuring', 'Live', 'On Hold'];
+const S_CLASS = { 'New':'s-new','In Review':'s-review','Configuring':'s-configuring','Live':'s-live','On Hold':'s-hold' };
+const S_DOT   = { 'New':'○','In Review':'◑','Configuring':'◔','Live':'●','On Hold':'⊘' };
+
+let records = [], currentView = 'pipeline', activeId = null;
+
+// ── Password gate ─────────────────────────────────────────
+function checkGate() {
+  const pw = document.getElementById('gate-pw').value;
+  if (pw === DASH_PASSWORD || localStorage.getItem('nd_auth') === DASH_PASSWORD) {
+    localStorage.setItem('nd_auth', pw);
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('gate-err').textContent = 'Incorrect password.';
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', e => { if (e.key === 'Enter') checkGate(); });
+if (localStorage.getItem('nd_auth') === DASH_PASSWORD) {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+// ── Data ──────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('state-area').style.display = 'block';
+  document.getElementById('state-area').textContent = 'Loading submissions…';
+  document.getElementById('view-pipeline').style.display = 'none';
+  document.getElementById('view-table').style.display = 'none';
+
+  const { data, error } = await db
+    .from('intake_submissions')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    document.getElementById('state-area').textContent = 'Error: ' + error.message;
+    return;
+  }
+  records = data || [];
+  renderStats();
+  renderView();
+  document.getElementById('state-area').style.display = records.length === 0 ? 'block' : 'none';
+  if (records.length === 0) document.getElementById('state-area').textContent = 'No submissions yet.';
+}
+
+async function saveRecord(id, fields) {
+  const { data, error } = await db
+    .from('intake_submissions')
+    .update(fields)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// ── Stats ─────────────────────────────────────────────────
+function renderStats() {
+  const c = { 'New':0,'In Review':0,'Configuring':0,'Live':0,'On Hold':0 };
+  records.forEach(r => { if (c[r.status] !== undefined) c[r.status]++; else c['New']++; });
+  document.getElementById('s-total').textContent = records.length;
+  document.getElementById('s-new').textContent = c['New'];
+  document.getElementById('s-review').textContent = c['In Review'];
+  document.getElementById('s-configuring').textContent = c['Configuring'];
+  document.getElementById('s-live').textContent = c['Live'];
+}
+
+// ── Views ─────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  document.getElementById('vbtn-pipeline').classList.toggle('active', v === 'pipeline');
+  document.getElementById('vbtn-table').classList.toggle('active', v === 'table');
+  renderView();
+}
+function renderView() {
+  if (records.length === 0) return;
+  if (currentView === 'pipeline') {
+    document.getElementById('view-table').style.display = 'none';
+    document.getElementById('view-pipeline').style.display = 'block';
+    renderPipeline();
+  } else {
+    document.getElementById('view-pipeline').style.display = 'none';
+    document.getElementById('view-table').style.display = 'block';
+    renderTable();
+  }
+}
+
+function renderPipeline() {
+  const cols = {}; STATUSES.forEach(s => cols[s] = []);
+  records.forEach(r => (cols[r.status] || cols['New']).push(r));
+  document.getElementById('pipeline-board').innerHTML = STATUSES.map(s => `
+    <div class="p-col">
+      <div class="p-col-hdr"><span class="p-col-name">${s}</span><span class="p-col-count">${cols[s].length}</span></div>
+      <div class="p-cards">
+        ${cols[s].length === 0 ? '<div class="p-empty">—</div>' : cols[s].map(r => `
+          <div class="card" onclick="openPanel('${r.id}')">
+            <div class="card-org">${esc(r.org_name||'—')}</div>
+            <div class="card-meta">${esc(r.contact_name||'')}</div>
+            <div class="card-meta">${esc(r.email||'')}</div>
+            <div class="card-meta" style="color:#ccc;margin-top:4px;">${fmtDate(r.created_at)}</div>
+            ${r.track ? `<span class="track-badge ${r.track.includes('A')?'track-a':'track-b'}">${esc(r.track)}</span>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tbl-body');
+  if (!records.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:48px;">No submissions yet.</td></tr>'; return; }
+  tbody.innerHTML = records.map(r => {
+    const s = r.status || 'New';
+    return `<tr onclick="openPanel('${r.id}')">
+      <td><strong>${esc(r.org_name||'—')}</strong></td>
+      <td>${r.track?`<span class="track-badge ${r.track.includes('A')?'track-a':'track-b'}" style="font-size:11px;">${esc(r.track)}</span>`:'—'}</td>
+      <td>${esc(r.contact_name||'—')}</td>
+      <td><a href="mailto:${esc(r.email||'')}" onclick="event.stopPropagation()" style="color:#1a1a1a;text-decoration:none;">${esc(r.email||'—')}</a></td>
+      <td><span class="s-pill ${S_CLASS[s]||'s-new'}">${S_DOT[s]||'○'} ${s}</span></td>
+      <td style="color:#888;white-space:nowrap;">${fmtDate(r.created_at)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Detail panel ──────────────────────────────────────────
+function openPanel(id) {
+  const rec = records.find(r => r.id === id);
+  if (!rec) return;
+  activeId = id;
+  const fd = rec.form_data || {};
+
+  document.getElementById('p-org').textContent = rec.org_name || '—';
+  document.getElementById('p-sub').textContent = [rec.track, fmtDate(rec.created_at)].filter(Boolean).join(' · ');
+
+  document.getElementById('p-body').innerHTML = `
+    <div class="p-sec">
+      <div class="p-sec-title">Status &amp; Notes</div>
+      <div style="margin-bottom:12px;">
+        <label class="ctrl-label">Status</label>
+        <select class="ctrl-select" id="p-status">
+          ${STATUSES.map(s=>`<option${(rec.status||'New')===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="ctrl-label">Notes visible to client</label>
+        <textarea class="ctrl-textarea" id="p-notes" placeholder="Add notes for the client…">${esc(rec.notes||'')}</textarea>
+      </div>
+      <div class="save-row">
+        <button class="save-btn" onclick="savePanel()">Save</button>
+        <span class="save-fb" id="p-fb"></span>
+      </div>
+    </div>
+    <hr class="divider" />
+    <div class="p-sec">
+      <div class="p-sec-title">Contact</div>
+      ${pf('Name & title', rec.contact_name)}
+      ${pf('Email', rec.email ? `<a href="mailto:${esc(rec.email)}" style="color:#1a1a1a;">${esc(rec.email)}</a>` : null, true)}
+      ${pf('Phone', rec.phone)}
+      ${pf('Organization', rec.org_name)}
+      ${pf('EIN', rec.ein)}
+      ${pf('Location', rec.location)}
+    </div>
+    <hr class="divider" />
+    <div class="p-sec">
+      <div class="p-sec-title">Track &amp; Goals</div>
+      ${pf('Track', rec.track)}
+      ${pf('Go-live target', fd.go_live_b || fd.go_live_a)}
+      ${pf('Year 1 book %', fd.year1_book)}
+      ${pf('Success metrics', Array.isArray(fd.success_metrics) ? fd.success_metrics.join(', ') : fd.success_metrics)}
+    </div>
+    <hr class="divider" />
+    <div class="p-sec">
+      <div class="p-sec-title">Lending Operation</div>
+      ${pf('Loan types', Array.isArray(fd.loan_types) ? fd.loan_types.join(', ') : fd.loan_types)}
+      ${pf('Borrower profile', fd.borrower_profile)}
+      ${pf('Total book', fd.book_dollars)}
+      ${pf('Active borrowers', fd.active_borrowers)}
+      ${pf('Geography', fd.geography)}
+      ${pf('Challenges', fd.challenges || fd.challenges_a)}
+    </div>
+    <hr class="divider" />
+    <div class="p-sec">
+      <div class="p-sec-title">Loan Program</div>
+      ${pf('Program name', fd.program_name)}
+      ${pf('Loan type', fd.loan_type)}
+      ${pf('Amount range', fd.loan_min && fd.loan_max ? fd.loan_min + ' – ' + fd.loan_max : null)}
+      ${pf('Term range', fd.term_min && fd.term_max ? fd.term_min + ' – ' + fd.term_max : null)}
+      ${pf('Rate (APR)', fd.rate_apr)}
+      ${pf('Min revenue', fd.min_revenue)}
+      ${pf('Min time in business', fd.min_tib)}
+    </div>
+    <hr class="divider" />
+    <div class="p-sec">
+      <div class="p-sec-title">Full Form Data</div>
+      <details>
+        <summary>Show all fields →</summary>
+        <pre>${esc(JSON.stringify(fd, null, 2))}</pre>
+      </details>
+    </div>
+  `;
+
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function pf(label, val, raw=false) {
+  const empty = val===null||val===undefined||val==='';
+  return `<div class="pf"><div class="pf-label">${label}</div><div class="pf-value${empty?' empty':''}">${empty?'Not provided':(raw?val:esc(String(val)))}</div></div>`;
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('detail-panel').classList.remove('open');
+  activeId = null;
+}
+
+async function savePanel() {
+  if (!activeId) return;
+  const status = document.getElementById('p-status').value;
+  const notes  = document.getElementById('p-notes').value;
+  const fb = document.getElementById('p-fb');
+  fb.textContent = 'Saving…';
+  try {
+    const updated = await saveRecord(activeId, { status, notes });
+    const idx = records.findIndex(r => r.id === activeId);
+    if (idx >= 0) records[idx] = { ...records[idx], ...updated };
+    fb.textContent = '✓ Saved';
+    renderStats(); renderView();
+    setTimeout(() => { fb.textContent = ''; }, 2500);
+  } catch(e) {
+    fb.textContent = '⚠ ' + e.message;
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(d) { if (!d) return ''; try { return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){return d;} }
+
+// ── Init ──────────────────────────────────────────────────
+if (localStorage.getItem('nd_auth') === DASH_PASSWORD) loadData();
+</script>
+</body>
+</html>
