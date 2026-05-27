@@ -75,6 +75,21 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 /* Conditional sections */
 .show-if-existing, .show-if-new { display: none; }
 
+/* Criteria apply/priority rows */
+.crit-apply, .crit-priority { display:flex; flex-wrap:wrap; gap:6px 20px; font-size:12px; color:#333; margin-bottom:4px; }
+.crit-apply label, .crit-priority label { display:flex; align-items:center; gap:5px; cursor:pointer; }
+.crit-apply input, .crit-priority input { width:13px; height:13px; accent-color:#1a1a1a; flex-shrink:0; }
+.crit-label { font-size:11px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:0.05em; margin:8px 0 4px; }
+
+/* Legal doc tables */
+.doc-table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:8px; }
+.doc-table th { text-align:left; font-size:11px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:0.05em; padding:0 8px 6px 0; border-bottom:1px solid #e5e3de; }
+.doc-table td { padding:7px 8px 7px 0; border-bottom:1px solid #f5f3ef; vertical-align:middle; font-size:12px; }
+.doc-table tr:last-child td { border-bottom:none; }
+.doc-table .yn { display:flex; gap:10px; }
+.doc-table .yn label { display:flex; align-items:center; gap:4px; cursor:pointer; }
+.doc-table .yn input { width:13px; height:13px; accent-color:#1a1a1a; }
+
 /* Navigation */
 .nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
 .btn { padding: 10px 22px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.15s; }
@@ -560,13 +575,1099 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
       </div>
     </div>
 
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 10 — Loan Product Config: Part 1 Overview
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-10">
+    <div class="step-title">Loan Product Configuration Template</div>
+    <div class="step-desc">Complete one copy of this template for each loan product you plan to run on Ned. This document tells our team how to configure your borrower application, eligibility criteria, scoring, and platform settings. You do not need to share your proprietary calculations. We will translate your inputs into platform settings and confirm the configuration with you before anything goes live. Questions? Email <a href="mailto:support@nedhelps.com" style="color:#1a1a1a;">support@nedhelps.com</a> — this document is designed to be completed in a single working session of about 30 minutes.</div>
+
+    <div class="section">
+      <div class="section-title">PART 1 — LOAN PRODUCT OVERVIEW</div>
+      <div class="field field-mb">
+        <label class="field-label">1.1 &nbsp; What would you like to name this loan product? (as you'd like it to appear to borrowers)</label>
+        <input type="text" name="lp_name" />
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">1.2 &nbsp; How would you describe this loan product to borrowers? (1–2 sentences, written as a borrower would read it)</label>
+        <textarea name="lp_description"></textarea>
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">1.3 &nbsp; What is the primary purpose or objective of this loan product? (e.g., "Provide working capital to emerging food businesses in Florida")</label>
+        <textarea name="lp_purpose"></textarea>
+      </div>
+      <hr class="divider" />
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">1.4 &nbsp; Is this loan product funded by a specific grant, investor, or capital source that has reporting or eligibility requirements we should know about?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="lp_funded" value="Yes" /> Yes — describe: <input type="text" name="lp_funded_desc" style="display:inline-block;width:280px;margin-left:8px;" /></label>
+          <label class="check-item"><input type="radio" name="lp_funded" value="No" /> No</label>
+        </div>
+      </div>
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">1.5 &nbsp; Does this loan product have a defined end date or fund expiration?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="lp_end_date" value="Yes" /> Yes — date: <input type="text" name="lp_end_date_val" style="display:inline-block;width:180px;margin-left:8px;" /></label>
+          <label class="check-item"><input type="radio" name="lp_end_date" value="No / Evergreen" /> No / Evergreen</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 11 — Part 2: Loan Mechanics
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-11">
+    <div class="step-title">PART 2 — LOAN MECHANICS</div>
+    <div class="step-desc">These fields define what the loan looks like. Ned uses these to set up your borrower application and configure repayment. Note, lenders have the ability to change and edit all loan terms on the platform.</div>
+
+    <div class="section">
+      <div class="section-title">2.1</div>
+      <div class="section-note">What type of loan is this? (select one)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="lp_type" value="Term loan (fixed amount, fixed repayment schedule)" /> Term loan (fixed amount, fixed repayment schedule)</label>
+        <label class="check-item"><input type="radio" name="lp_type" value="Revenue-based repayment (amount varies with borrower revenue)" /> Revenue-based repayment (amount varies with borrower revenue)</label>
+        <label class="check-item"><input type="radio" name="lp_type" value="Line of credit (revolving draw)" /> Line of credit (revolving draw)</label>
+        <label class="check-item"><input type="radio" name="lp_type" value="Other" /> Other: <input type="text" name="lp_type_other" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.2</div>
+      <div class="section-note">What is your typical loan amount range?</div>
+      <div class="row row-2">
+        <div class="field"><label class="field-label">Minimum loan amount:</label><input type="text" name="lp_loan_min" placeholder="$" /></div>
+        <div class="field"><label class="field-label">Maximum loan amount:</label><input type="text" name="lp_loan_max" placeholder="$" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.3</div>
+      <div class="section-note">What is the typical loan term range?</div>
+      <div class="row row-2">
+        <div class="field"><label class="field-label">Minimum term: <span style="font-weight:400;color:#888;"> months</span></label><input type="text" name="lp_term_min" /></div>
+        <div class="field"><label class="field-label">Maximum term: <span style="font-weight:400;color:#888;"> months</span></label><input type="text" name="lp_term_max" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.4</div>
+      <div class="section-note">How will repayments be structured?</div>
+      <div class="field-label" style="color:#555;margin-bottom:6px;">For fixed repayments:</div>
+      <div class="field-mb">
+        <div class="field-label" style="font-size:11px;color:#888;margin-bottom:4px;">Repayment frequency:</div>
+        <div class="yn">
+          <label><input type="radio" name="lp_repay_freq" value="Weekly" /> Weekly</label>
+          <label><input type="radio" name="lp_repay_freq" value="Bi-weekly" /> Bi-weekly</label>
+          <label><input type="radio" name="lp_repay_freq" value="Monthly" /> Monthly</label>
+        </div>
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">Is this a fixed payment amount, or calculated from a borrower's unique loan terms?</label>
+        <input type="text" name="lp_repay_type" />
+      </div>
+      <hr class="divider" />
+      <div class="field-label" style="color:#555;margin-bottom:6px;">For revenue-based repayments:</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Revenue share percentage (% of monthly revenue remitted as payment):</label><input type="text" name="lp_rev_share_pct" placeholder="%" /></div>
+        <div class="field"><label class="field-label">Minimum monthly payment floor (if any):</label><input type="text" name="lp_payment_floor" placeholder="$" /></div>
+      </div>
+      <div class="row row-3">
+        <div class="field"><label class="field-label">Maximum monthly payment ceiling (if any):</label><input type="text" name="lp_payment_ceiling" placeholder="$" /></div>
+        <div class="field"><label class="field-label">APR cap (if any):</label><input type="text" name="lp_apr_cap" placeholder="$" /></div>
+        <div class="field"><label class="field-label">Maximum repayment period (number of periods):</label><input type="text" name="lp_max_periods" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.5</div>
+      <div class="section-note">What is the typical cost of capital to the borrower? (for disclosure and application purposes)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Interest rate (APR):</label><input type="text" name="lp_apr" placeholder="%" /></div>
+        <div class="field"><label class="field-label">Factor rate: <span style="font-weight:400;color:#888;">(e.g., 1.15x)</span></label><input type="text" name="lp_factor_rate" /></div>
+      </div>
+      <label class="check-item"><input type="checkbox" name="lp_zero_interest" value="No interest / 0% loan product" /> No interest / 0% loan product</label>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.6</div>
+      <div class="section-note">Do you charge an origination or closing fee? (or N/A if none)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item">
+          <input type="radio" name="lp_orig_fee" value="Yes" />
+          Yes — Amount or %: <input type="text" name="lp_orig_fee_amt" style="display:inline-block;width:120px;margin:0 8px;" />
+          <label style="display:inline-flex;align-items:center;gap:5px;"><input type="radio" name="lp_orig_fee_method" value="Deducted from disbursement" /> Deducted from disbursement</label>&nbsp;
+          <label style="display:inline-flex;align-items:center;gap:5px;"><input type="radio" name="lp_orig_fee_method" value="Paid separately" /> Paid separately</label>
+        </label>
+        <label class="check-item"><input type="radio" name="lp_orig_fee" value="No" /> No</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.7</div>
+      <div class="section-note">What is your prepayment policy? (or N/A if no policy)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="lp_prepay" value="Borrowers may prepay at any time with no penalty" /> Borrowers may prepay at any time with no penalty</label>
+        <label class="check-item"><input type="radio" name="lp_prepay" value="Prepayment penalty applies" /> Prepayment penalty applies — describe: <input type="text" name="lp_prepay_desc" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+        <label class="check-item"><input type="radio" name="lp_prepay" value="Other" /> Other: <input type="text" name="lp_prepay_other" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2.8</div>
+      <div class="section-note">How will loan funds be disbursed to borrowers?</div>
+      <div class="check-group col-1">
+        <label class="check-item"><input type="radio" name="lp_disburse" value="ACH to borrower's business bank account using Ned" /> ACH to borrower's business bank account using Ned</label>
+        <label class="check-item"><input type="radio" name="lp_disburse" value="ACH to borrower's business bank account (off Ned's platform)" /> ACH to borrower's business bank account (off Ned's platform)</label>
+        <label class="check-item"><input type="radio" name="lp_disburse" value="Check (off Ned's platform)" /> Check (off Ned's platform)</label>
+        <label class="check-item"><input type="radio" name="lp_disburse" value="Wire (off Ned's platform)" /> Wire (off Ned's platform)</label>
+        <label class="check-item"><input type="radio" name="lp_disburse" value="Other" /> Other: <input type="text" name="lp_disburse_other" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 12 — Part 3A: Revenue & Loan Size
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-12">
+    <div class="step-title">PART 3 — BORROWER ELIGIBILITY CRITERIA</div>
+    <div class="step-desc">For each criterion, do two things: (1) set your threshold and tell us how strictly it should be applied (hard cutoff vs. flexible review), and (2) rate its priority — how heavily this criterion should weigh in your overall eligibility decision. Both inputs together allow us to configure your scoring logic accurately. Thresholds set the eligibility floor; priority weights shape how criteria are scored and ranked relative to each other. At the end of this section (3G), you will find a consolidated Priority Summary Matrix where you can review and confirm all criteria weights at a glance.</div>
+
+    <div class="section">
+      <div class="section-title">3A — Revenue &amp; Loan Size</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3A.1 &nbsp; Do you have a minimum (or maximum) annual revenue requirement for new applicants? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum annual revenue:</label><input type="text" name="rev_min" placeholder="$" /></div>
+        <div class="field"><label class="field-label">Maximum annual revenue (if any cap):</label><input type="text" name="rev_max" placeholder="$" /></div>
+      </div>
+      <div class="field-hint" style="margin-bottom:8px;">Ned verifies this from up to 24 months of bank transaction data.</div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="rev_apply" value="Hard cutoff — automatically disqualify if not met" /> Hard cutoff — automatically disqualify if not met</label>
+        <label><input type="radio" name="rev_apply" value="Soft flag — flag for manual review, but don't auto-disqualify" /> Soft flag — flag for manual review, but don't auto-disqualify</label>
+        <label><input type="radio" name="rev_apply" value="Not using this criterion" /> Not using this criterion</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="rev_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="rev_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="rev_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="rev_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3A.2 &nbsp; Do you have a loan-to-revenue limit — ie a cap on how large a loan can be relative to the borrower's revenue? (or N/A)</div>
+      <div class="field field-mb">
+        <label class="field-label">Maximum loan amount as a percentage of the borrower's annual revenue:</label>
+        <input type="text" name="ltr_pct" placeholder="%" style="max-width:160px;" />
+        <div class="field-hint">(Example: If set to 25%, a borrower with $200K revenue can receive a maximum $50K loan)</div>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="ltr_revenue_basis" value="Use trailing 12-month revenue" /> Use trailing 12-month revenue</label>
+        <label><input type="radio" name="ltr_revenue_basis" value="Use stated annual revenue" /> Use stated annual revenue</label>
+        <label><input type="radio" name="ltr_revenue_basis" value="Either" /> Either</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="ltr_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="ltr_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="ltr_apply" value="Not using this criterion" /> Not using this criterion</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="ltr_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="ltr_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="ltr_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="ltr_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 13 — 3B: Cash Flow & Financial Health
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-13">
+    <div class="step-title">3B — Cash Flow &amp; Financial Health</div>
+    <div class="step-desc">These criteria measure whether the borrower can realistically make loan payments. Ned pulls this data automatically from the borrower's connected bank account with no PDF statements required.</div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.1 &nbsp; What is your minimum Debt Service Coverage Ratio (DSCR) requirement for applicants? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum acceptable DSCR: <span style="font-weight:400;color:#888;">(e.g., 1.0, 1.25)</span></label><input type="text" name="dscr_min" /></div>
+        <div class="field"><label class="field-label">Target DSCR (your ideal threshold, above the minimum):</label><input type="text" name="dscr_target" /></div>
+      </div>
+      <div class="field-hint" style="margin-bottom:8px;">For instance, DSCR above 1.0 means the business generates more cash than it needs to cover existing debt.</div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="dscr_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="dscr_apply" value="Soft flag for review" /> Soft flag for review</label>
+        <label><input type="radio" name="dscr_apply" value="Not using this criterion" /> Not using this criterion</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="dscr_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="dscr_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="dscr_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="dscr_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.2 &nbsp; Do you require a minimum percentage of months with positive net cash flow? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">What minimum percentage of months should a borrower show positive net cash flow?</label><input type="text" name="cashflow_pct" placeholder="%" /></div>
+        <div class="field"><label class="field-label">Look-back period: <span style="font-weight:400;color:#888;">months (typically 12–24)</span></label><input type="text" name="cashflow_lookback" /></div>
+      </div>
+      <div class="field-hint" style="margin-bottom:8px;">(Example: "At least 60% of the last 18 months must show positive cash flow")</div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="cashflow_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="cashflow_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="cashflow_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="cashflow_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="cashflow_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="cashflow_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="cashflow_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.3 &nbsp; Do you have a limit on NSF or overdraft events as seen in applicant bank data? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Maximum acceptable NSF or overdraft events in recent history: <span style="font-weight:400;color:#888;">events</span></label><input type="text" name="nsf_max" /></div>
+        <div class="field"><label class="field-label">Look-back period: <span style="font-weight:400;color:#888;">months (typically 3–6)</span></label><input type="text" name="nsf_lookback" /></div>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="nsf_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="nsf_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="nsf_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="nsf_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="nsf_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="nsf_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="nsf_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.4 &nbsp; Do you have a limit on the number of days a borrower's account can be in a negative balance? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Maximum acceptable number of days with a negative account balance: <span style="font-weight:400;color:#888;">days</span></label><input type="text" name="neg_bal_days" /></div>
+        <div class="field"><label class="field-label">Look-back period: <span style="font-weight:400;color:#888;">months</span></label><input type="text" name="neg_bal_lookback" /></div>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="neg_bal_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="neg_bal_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="neg_bal_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="neg_bal_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="neg_bal_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="neg_bal_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="neg_bal_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.5 &nbsp; Do you require the borrower to show positive net cash flow in both the most recent 12 months AND the prior 12 months?</div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="yoy_cashflow" value="Yes (year-over-year positive)" /> Yes (year-over-year positive)</label>
+        <label><input type="radio" name="yoy_cashflow" value="No" /> No</label>
+        <label><input type="radio" name="yoy_cashflow" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="yoy_cashflow_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="yoy_cashflow_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="yoy_cashflow_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="yoy_cashflow_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.6 &nbsp; Do you require a minimum amount of cash available for debt service (CFADS) — cash remaining after operating expenses, before new loan payments? (or N/A)</div>
+      <div class="field field-mb">
+        <label class="field-label">Minimum cash available for debt service: <span style="font-weight:400;color:#888;">/month</span></label>
+        <input type="text" name="cfads_min" placeholder="$" style="max-width:200px;" />
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="cfads_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="cfads_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="cfads_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="cfads_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="cfads_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="cfads_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="cfads_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3B.7 &nbsp; May borrowers have other active term loans or lines of credit outstanding at the time of application?</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="existing_debt" value="Yes — existing debt is acceptable; we evaluate capacity through DSCR and CFADS" /> Yes — existing debt is acceptable; we evaluate capacity through DSCR and CFADS</label>
+        <label class="check-item"><input type="radio" name="existing_debt" value="No — borrowers with other outstanding term debt are ineligible" /> No — borrowers with other outstanding term debt are ineligible</label>
+        <label class="check-item"><input type="radio" name="existing_debt" value="Case-by-case — flag for manual review" /> Case-by-case — flag for manual review</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="existing_debt_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="existing_debt_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="existing_debt_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="existing_debt_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="existing_debt_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="existing_debt_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="existing_debt_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 14 — 3C + 3D: Profitability & Business Eligibility
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-14">
+    <div class="step-title">3C — Profitability &amp; Growth &nbsp;/&nbsp; 3D — Business Eligibility</div>
+
+    <div class="section">
+      <div class="section-title">3C — Profitability &amp; Growth</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3C.1 &nbsp; Do you require a minimum profit margin from new applicants? (or N/A)</div>
+      <div class="field field-mb">
+        <label class="field-label">Minimum annual profit margin (revenue minus expenses, as % of revenue):</label>
+        <input type="text" name="margin_min" placeholder="%" style="max-width:160px;" />
+        <div class="field-hint">(Example: "Must show at least 5% net margin over 24 months")</div>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="margin_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="margin_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="margin_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="margin_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="margin_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="margin_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="margin_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3C.2 &nbsp; Do you require that the borrower's total revenue exceeds total expenses over the last 24 months?</div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="cashflow_pos" value="Yes — must be cash-flow positive overall" /> Yes — must be cash-flow positive overall</label>
+        <label><input type="radio" name="cashflow_pos" value="No" /> No</label>
+        <label><input type="radio" name="cashflow_pos" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="cashflow_pos_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="cashflow_pos_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="cashflow_pos_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="cashflow_pos_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3C.3 &nbsp; Do you have a minimum revenue growth requirement? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="rev_growth" value="Yes" /> Yes — minimum year-over-year growth: <input type="text" name="rev_growth_pct" style="display:inline-block;width:80px;margin-left:8px;" placeholder="%" /></label>
+        <label class="check-item"><input type="radio" name="rev_growth" value="No" /> No</label>
+        <label class="check-item"><input type="radio" name="rev_growth" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="rev_growth_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="rev_growth_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="rev_growth_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="rev_growth_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3D — Business Eligibility</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.1 &nbsp; What is your minimum time-in-business requirement? (or N/A)</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Minimum operating history: <span style="font-weight:400;color:#888;">years</span></label><input type="text" name="tib_years" /></div>
+        <div class="field"><label class="field-label">Or: <span style="font-weight:400;color:#888;">months</span></label><input type="text" name="tib_months" /></div>
+      </div>
+      <div class="field-label" style="font-size:12px;color:#555;margin-bottom:6px;">How do you want Ned to verify this?</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="tib_verify" value="Business registration date (from borrower application)" /> Business registration date (from borrower application)</label>
+        <label class="check-item"><input type="radio" name="tib_verify" value="Bank transaction history (Ned confirms revenue going back at least N months)" /> Bank transaction history (Ned confirms revenue going back at least N months)</label>
+        <label class="check-item"><input type="radio" name="tib_verify" value="Either method acceptable" /> Either method acceptable</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="tib_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="tib_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="tib_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="tib_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="tib_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="tib_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="tib_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.2 &nbsp; Do you have geographic requirements for this loan product? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="geo_req" value="No geographic restriction" /> No geographic restriction</label>
+        <label class="check-item"><input type="radio" name="geo_req" value="Borrower must operate in specific state/region" /> Borrower must operate in: <input type="text" name="geo_state" style="display:inline-block;width:200px;margin-left:8px;" placeholder="state/region" /></label>
+        <label class="check-item"><input type="radio" name="geo_req" value="Borrower must operate in one of these states" /> Borrower must operate in one of these states: <input type="text" name="geo_states_list" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+        <label class="check-item"><input type="radio" name="geo_req" value="County-level restriction applies" /> County-level restriction applies — specify counties: <input type="text" name="geo_counties" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+      <div class="field-label" style="font-size:12px;color:#555;margin-bottom:6px;">Geographic classification (check if relevant to your mission):</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="geo_class" value="Must be located in a metropolitan county (urban area with 50,000+ residents, per USDA definition)" /> Must be located in a metropolitan county (urban area with 50,000+ residents, per USDA definition)</label>
+        <label class="check-item"><input type="radio" name="geo_class" value="Must be located in a nonmetropolitan / rural county" /> Must be located in a nonmetropolitan / rural county</label>
+        <label class="check-item"><input type="radio" name="geo_class" value="No preference on metro vs. rural classification" /> No preference on metro vs. rural classification</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="geo_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="geo_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="geo_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="geo_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="geo_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="geo_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="geo_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.3 &nbsp; Do you require borrowers to have an active business checking account?</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="biz_checking" value="Required — borrower must have an active business checking account" /> Required — borrower must have an active business checking account</label>
+        <label class="check-item"><input type="radio" name="biz_checking" value="Not required" /> Not required</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="biz_checking_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="biz_checking_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="biz_checking_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="biz_checking_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.4 &nbsp; Do you have a maximum number of business owners? (or N/A if no restriction)</div>
+      <div class="field field-mb">
+        <label class="field-label">Maximum number of owners: <span style="font-weight:400;color:#888;">(leave blank if no restriction)</span></label>
+        <input type="text" name="max_owners" style="max-width:160px;" />
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="max_owners_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="max_owners_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="max_owners_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="max_owners_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.5 &nbsp; What is the minimum bank transaction history you require for analysis?</div>
+      <div class="field field-mb">
+        <label class="field-label">Minimum months of bank transaction history: <span style="font-weight:400;color:#888;">months</span></label>
+        <input type="text" name="bank_history_min" style="max-width:160px;" />
+        <div class="field-hint">(Ned's financial analysis tools require at least 12 months; 24 months enables full DSCR and growth analysis)</div>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="bank_history_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="bank_history_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="bank_history_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="bank_history_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="bank_history_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="bank_history_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="bank_history_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.6 &nbsp; Does this loan product have a minimum full-time employee requirement? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="min_fte" value="At least 1 full-time employee" /> At least 1 full-time employee</label>
+        <label class="check-item"><input type="radio" name="min_fte" value="At least 2 full-time employees" /> At least 2 full-time employees</label>
+        <label class="check-item"><input type="radio" name="min_fte" value="At least 5 full-time employees" /> At least 5 full-time employees</label>
+        <label class="check-item"><input type="radio" name="min_fte" value="At least 10 full-time employees" /> At least 10 full-time employees</label>
+        <label class="check-item"><input type="radio" name="min_fte" value="At least 20 full-time employees" /> At least 20 full-time employees</label>
+        <label class="check-item"><input type="radio" name="min_fte" value="No minimum / no preference" /> No minimum / no preference</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="min_fte_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="min_fte_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="min_fte_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="min_fte_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="min_fte_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="min_fte_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="min_fte_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.7 &nbsp; Do you require borrowers to use an accountant or an online accounting system (e.g., QuickBooks, Wave, FreshBooks)? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="accounting_req" value="Yes — required for eligibility" /> Yes — required for eligibility</label>
+        <label class="check-item"><input type="radio" name="accounting_req" value="No — not required" /> No — not required</label>
+        <label class="check-item"><input type="radio" name="accounting_req" value="Preferred but not required — flag if absent" /> Preferred but not required — flag if absent</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="accounting_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="accounting_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="accounting_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="accounting_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="accounting_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="accounting_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="accounting_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.8 &nbsp; Do you have any industry restrictions for this loan product? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="industry_restriction" value="No industry restrictions" /> No industry restrictions</label>
+        <label class="check-item"><input type="radio" name="industry_restriction" value="Restricted to specific industries" /> Restricted to specific industries: <input type="text" name="industry_restricted_list" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+        <label class="check-item"><input type="radio" name="industry_restriction" value="Excluded industries" /> Excluded industries (borrowers in these sectors are ineligible): <input type="text" name="industry_excluded_list" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="industry_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="industry_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="industry_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="industry_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="industry_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="industry_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="industry_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3D.9 &nbsp; Does this loan product have mission or demographic eligibility requirements? (check all that apply, or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Loan product is open to all eligible borrowers (no demographic restriction)" /> Loan product is open to all eligible borrowers (no demographic restriction)</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Must be minority-owned business (at least one owner self-identifies as a minority)" /> Must be minority-owned business (at least one owner self-identifies as a minority)</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Must be Hispanic-owned (at least one owner self-identifies as Hispanic)" /> Must be Hispanic-owned (at least one owner self-identifies as Hispanic)</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Must be women-owned" /> Must be women-owned</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Must be veteran-owned" /> Must be veteran-owned</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="Low-income owner qualification (at least one owner's income at or below HUD AMI threshold)" /> Low-income owner qualification (at least one owner's income at or below HUD AMI threshold)</label>
+        <label class="check-item"><input type="checkbox" name="mission_elig" value="CDFI-qualified borrower criteria apply" /> CDFI-qualified borrower criteria apply — describe: <input type="text" name="cdfi_desc" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="mission_elig_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="mission_elig_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="mission_elig_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="mission_elig_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 15 — 3E + 3F: Owner & Credit + Custom Criteria
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-15">
+    <div class="step-title">3E — Owner &amp; Credit &nbsp;/&nbsp; 3F — Custom Criteria</div>
+
+    <div class="section">
+      <div class="section-title">3E — Owner &amp; Credit</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3E.1 &nbsp; Do you check owner credit? If so, what is the minimum acceptable credit profile? (or N/A if no credit check)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item" style="align-items:flex-start;flex-direction:column;gap:6px;">
+          <span style="display:flex;align-items:center;gap:8px;"><input type="radio" name="credit_check" value="Yes, we check credit" /> Yes, we check credit — minimum acceptable:</span>
+          <div style="padding-left:22px;" class="check-group col-1">
+            <label class="check-item"><input type="radio" name="credit_min" value="Good standing (no recent derogatory marks)" /> Good standing (no recent derogatory marks)</label>
+            <label class="check-item"><input type="radio" name="credit_min" value="Fair credit acceptable" /> Fair credit acceptable</label>
+            <label class="check-item"><input type="radio" name="credit_min" value="Minimum credit score" /> Minimum credit score: <input type="text" name="credit_min_score" style="display:inline-block;width:100px;margin-left:8px;" /></label>
+            <label class="check-item"><input type="radio" name="credit_min" value="Other" /> Other: <input type="text" name="credit_min_other" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+          </div>
+        </label>
+        <label class="check-item"><input type="radio" name="credit_check" value="No credit check" /> No credit check</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority field-mb">
+        <label><input type="radio" name="credit_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="credit_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="credit_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="credit_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field field-mb">
+        <label class="field-label">3E.2 &nbsp; At what ownership percentage do you require a credit review?</label>
+        <div class="field-hint" style="margin-bottom:6px;">Review credit for all owners with ownership of ___% or more (typically 20% or 25%)</div>
+        <input type="text" name="credit_ownership_threshold" placeholder="e.g. 20%" style="max-width:160px;" />
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3E.3 &nbsp; Do you require active trade lines on the credit report — at least 12 months of personal credit history? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="trade_lines" value="Yes — required" /> Yes — required</label>
+        <label class="check-item"><input type="radio" name="trade_lines" value="Not required" /> Not required</label>
+      </div>
+      <div class="crit-apply field-mb">
+        <label><input type="radio" name="trade_lines_apply" value="Hard cutoff" /> Hard cutoff</label>
+        <label><input type="radio" name="trade_lines_apply" value="Soft flag" /> Soft flag</label>
+        <label><input type="radio" name="trade_lines_apply" value="Not using" /> Not using</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="trade_lines_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="trade_lines_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="trade_lines_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="trade_lines_priority" value="Less important" /> Less important</label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3E.4 &nbsp; What is your policy on open bankruptcies, judgments, tax liens, collections, or charge-offs? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="bankruptcies" value="Open bankruptcies, judgments, tax liens, collections, or charge-offs in the last 24 months are disqualifying" /> Open bankruptcies, judgments, tax liens, collections, or charge-offs in the last 24 months are disqualifying</label>
+        <label class="check-item"><input type="radio" name="bankruptcies" value="Open bankruptcies only are disqualifying" /> Open bankruptcies only are disqualifying</label>
+        <label class="check-item"><input type="radio" name="bankruptcies" value="Review case-by-case — flag for manual review" /> Review case-by-case — flag for manual review</label>
+        <label class="check-item"><input type="radio" name="bankruptcies" value="Not evaluated" /> Not evaluated</label>
+      </div>
+      <div class="crit-label">Priority weight:</div>
+      <div class="crit-priority">
+        <label><input type="radio" name="bankruptcies_priority" value="Most important" /> Most important</label>
+        <label><input type="radio" name="bankruptcies_priority" value="Important" /> Important</label>
+        <label><input type="radio" name="bankruptcies_priority" value="Neutral" /> Neutral</label>
+        <label><input type="radio" name="bankruptcies_priority" value="Less important" /> Less important</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3F — Custom / Loan-Product-Specific Criteria</div>
+      <div class="section-note">Use this section for any eligibility criteria unique to this loan product that don't fit the categories above.</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3F.1 &nbsp; Do you have any custom yes/no eligibility questions you'd like to ask borrowers? (or N/A)</div>
+      <div class="field-hint" style="margin-bottom:10px;">(e.g., "Are you currently enrolled in a business development loan product?" or "Do you have a signed lease for your business location?")</div>
+      <table class="form-table" style="margin-bottom:16px;">
+        <thead><tr><th>Question</th><th style="width:120px;">Required Answer</th><th style="width:120px;">Hard cutoff or soft flag?</th><th style="width:160px;">Priority weight</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><input type="text" name="custom_q1" /></td>
+            <td><select name="custom_q1_answer"><option value="">Select…</option><option>Yes</option><option>No</option></select></td>
+            <td><select name="custom_q1_strictness"><option value="">Select…</option><option>Hard cutoff</option><option>Soft flag</option></select></td>
+            <td><select name="custom_q1_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option></select></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="custom_q2" /></td>
+            <td><select name="custom_q2_answer"><option value="">Select…</option><option>Yes</option><option>No</option></select></td>
+            <td><select name="custom_q2_strictness"><option value="">Select…</option><option>Hard cutoff</option><option>Soft flag</option></select></td>
+            <td><select name="custom_q2_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option></select></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="custom_q3" /></td>
+            <td><select name="custom_q3_answer"><option value="">Select…</option><option>Yes</option><option>No</option></select></td>
+            <td><select name="custom_q3_strictness"><option value="">Select…</option><option>Hard cutoff</option><option>Soft flag</option></select></td>
+            <td><select name="custom_q3_priority"><option value="">Select…</option><option>Most important</option><option>Important</option><option>Neutral</option><option>Less important</option></select></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">3F.2 &nbsp; Do you require a minimum owner equity contribution toward a project or purpose? (or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="radio" name="equity_contrib" value="Yes" /> Yes — owner must contribute at least <input type="text" name="equity_contrib_pct" style="display:inline-block;width:80px;margin:0 6px;" placeholder="%" /> of total project cost</label>
+        <label class="check-item"><input type="radio" name="equity_contrib" value="No" /> No</label>
+      </div>
+
+      <div class="field field-mb">
+        <label class="field-label">3F.3 &nbsp; Are there any eligibility criteria that you consider most important or want weighted more heavily in approval decisions? (Any additional context beyond your selections above, or N/A)</label>
+        <textarea name="criteria_priority_notes"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">3F.4 &nbsp; Are there any other eligibility criteria we should know about? (or N/A)</label>
+        <textarea name="other_criteria"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 16 — 3G: Criteria Priority Summary Matrix
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-16">
+    <div class="step-title">3G — Criteria Priority Summary Matrix</div>
+    <div class="step-desc">This matrix consolidates the priority weights you selected above so you and the Ned team can review your overall scoring configuration in one place. Check one box per row. This directly informs how Ned weights each criterion in your scoring engine.</div>
+
+    <div class="section">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:220px;">Criterion</th>
+            <th>Most Important</th><th>Important</th><th>Neutral</th><th>Less Important</th><th>Not Using</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Annual revenue</td><td><input type="radio" name="m_revenue" value="Most Important" /></td><td><input type="radio" name="m_revenue" value="Important" /></td><td><input type="radio" name="m_revenue" value="Neutral" /></td><td><input type="radio" name="m_revenue" value="Less Important" /></td><td><input type="radio" name="m_revenue" value="Not Using" /></td></tr>
+          <tr><td>Loan-to-revenue ratio</td><td><input type="radio" name="m_ltr" value="Most Important" /></td><td><input type="radio" name="m_ltr" value="Important" /></td><td><input type="radio" name="m_ltr" value="Neutral" /></td><td><input type="radio" name="m_ltr" value="Less Important" /></td><td><input type="radio" name="m_ltr" value="Not Using" /></td></tr>
+          <tr><td>DSCR (debt service coverage)</td><td><input type="radio" name="m_dscr" value="Most Important" /></td><td><input type="radio" name="m_dscr" value="Important" /></td><td><input type="radio" name="m_dscr" value="Neutral" /></td><td><input type="radio" name="m_dscr" value="Less Important" /></td><td><input type="radio" name="m_dscr" value="Not Using" /></td></tr>
+          <tr><td>Cash flow consistency</td><td><input type="radio" name="m_cashflow" value="Most Important" /></td><td><input type="radio" name="m_cashflow" value="Important" /></td><td><input type="radio" name="m_cashflow" value="Neutral" /></td><td><input type="radio" name="m_cashflow" value="Less Important" /></td><td><input type="radio" name="m_cashflow" value="Not Using" /></td></tr>
+          <tr><td>NSF / overdraft events</td><td><input type="radio" name="m_nsf" value="Most Important" /></td><td><input type="radio" name="m_nsf" value="Important" /></td><td><input type="radio" name="m_nsf" value="Neutral" /></td><td><input type="radio" name="m_nsf" value="Less Important" /></td><td><input type="radio" name="m_nsf" value="Not Using" /></td></tr>
+          <tr><td>Negative balance days</td><td><input type="radio" name="m_neg_bal" value="Most Important" /></td><td><input type="radio" name="m_neg_bal" value="Important" /></td><td><input type="radio" name="m_neg_bal" value="Neutral" /></td><td><input type="radio" name="m_neg_bal" value="Less Important" /></td><td><input type="radio" name="m_neg_bal" value="Not Using" /></td></tr>
+          <tr><td>Net cash flow trend (YoY)</td><td><input type="radio" name="m_cashflow_trend" value="Most Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Neutral" /></td><td><input type="radio" name="m_cashflow_trend" value="Less Important" /></td><td><input type="radio" name="m_cashflow_trend" value="Not Using" /></td></tr>
+          <tr><td>Cash available for debt service (CFADS)</td><td><input type="radio" name="m_cfads" value="Most Important" /></td><td><input type="radio" name="m_cfads" value="Important" /></td><td><input type="radio" name="m_cfads" value="Neutral" /></td><td><input type="radio" name="m_cfads" value="Less Important" /></td><td><input type="radio" name="m_cfads" value="Not Using" /></td></tr>
+          <tr><td>Outstanding debt / existing loans</td><td><input type="radio" name="m_existing_debt" value="Most Important" /></td><td><input type="radio" name="m_existing_debt" value="Important" /></td><td><input type="radio" name="m_existing_debt" value="Neutral" /></td><td><input type="radio" name="m_existing_debt" value="Less Important" /></td><td><input type="radio" name="m_existing_debt" value="Not Using" /></td></tr>
+          <tr><td>Profit margin</td><td><input type="radio" name="m_profit" value="Most Important" /></td><td><input type="radio" name="m_profit" value="Important" /></td><td><input type="radio" name="m_profit" value="Neutral" /></td><td><input type="radio" name="m_profit" value="Less Important" /></td><td><input type="radio" name="m_profit" value="Not Using" /></td></tr>
+          <tr><td>Operating efficiency</td><td><input type="radio" name="m_op_eff" value="Most Important" /></td><td><input type="radio" name="m_op_eff" value="Important" /></td><td><input type="radio" name="m_op_eff" value="Neutral" /></td><td><input type="radio" name="m_op_eff" value="Less Important" /></td><td><input type="radio" name="m_op_eff" value="Not Using" /></td></tr>
+          <tr><td>Revenue growth</td><td><input type="radio" name="m_rev_growth" value="Most Important" /></td><td><input type="radio" name="m_rev_growth" value="Important" /></td><td><input type="radio" name="m_rev_growth" value="Neutral" /></td><td><input type="radio" name="m_rev_growth" value="Less Important" /></td><td><input type="radio" name="m_rev_growth" value="Not Using" /></td></tr>
+          <tr><td>Time in business</td><td><input type="radio" name="m_tib" value="Most Important" /></td><td><input type="radio" name="m_tib" value="Important" /></td><td><input type="radio" name="m_tib" value="Neutral" /></td><td><input type="radio" name="m_tib" value="Less Important" /></td><td><input type="radio" name="m_tib" value="Not Using" /></td></tr>
+          <tr><td>Geographic location</td><td><input type="radio" name="m_geo" value="Most Important" /></td><td><input type="radio" name="m_geo" value="Important" /></td><td><input type="radio" name="m_geo" value="Neutral" /></td><td><input type="radio" name="m_geo" value="Less Important" /></td><td><input type="radio" name="m_geo" value="Not Using" /></td></tr>
+          <tr><td>Employee count</td><td><input type="radio" name="m_employees" value="Most Important" /></td><td><input type="radio" name="m_employees" value="Important" /></td><td><input type="radio" name="m_employees" value="Neutral" /></td><td><input type="radio" name="m_employees" value="Less Important" /></td><td><input type="radio" name="m_employees" value="Not Using" /></td></tr>
+          <tr><td>Accounting system / bookkeeping</td><td><input type="radio" name="m_accounting" value="Most Important" /></td><td><input type="radio" name="m_accounting" value="Important" /></td><td><input type="radio" name="m_accounting" value="Neutral" /></td><td><input type="radio" name="m_accounting" value="Less Important" /></td><td><input type="radio" name="m_accounting" value="Not Using" /></td></tr>
+          <tr><td>Industry / sector</td><td><input type="radio" name="m_industry" value="Most Important" /></td><td><input type="radio" name="m_industry" value="Important" /></td><td><input type="radio" name="m_industry" value="Neutral" /></td><td><input type="radio" name="m_industry" value="Less Important" /></td><td><input type="radio" name="m_industry" value="Not Using" /></td></tr>
+          <tr><td>Mission / demographic eligibility</td><td><input type="radio" name="m_mission" value="Most Important" /></td><td><input type="radio" name="m_mission" value="Important" /></td><td><input type="radio" name="m_mission" value="Neutral" /></td><td><input type="radio" name="m_mission" value="Less Important" /></td><td><input type="radio" name="m_mission" value="Not Using" /></td></tr>
+          <tr><td>Owner credit standing</td><td><input type="radio" name="m_credit" value="Most Important" /></td><td><input type="radio" name="m_credit" value="Important" /></td><td><input type="radio" name="m_credit" value="Neutral" /></td><td><input type="radio" name="m_credit" value="Less Important" /></td><td><input type="radio" name="m_credit" value="Not Using" /></td></tr>
+          <tr><td>Trade line history</td><td><input type="radio" name="m_trade" value="Most Important" /></td><td><input type="radio" name="m_trade" value="Important" /></td><td><input type="radio" name="m_trade" value="Neutral" /></td><td><input type="radio" name="m_trade" value="Less Important" /></td><td><input type="radio" name="m_trade" value="Not Using" /></td></tr>
+          <tr><td>Bankruptcies, judgments, liens</td><td><input type="radio" name="m_bk" value="Most Important" /></td><td><input type="radio" name="m_bk" value="Important" /></td><td><input type="radio" name="m_bk" value="Neutral" /></td><td><input type="radio" name="m_bk" value="Less Important" /></td><td><input type="radio" name="m_bk" value="Not Using" /></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 17 — Part 4: Required Diligence Documents
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-17">
+    <div class="step-title">PART 4 — REQUIRED DILIGENCE DOCUMENTS</div>
+    <div class="step-desc">What documents will you require from borrowers before final loan approval? Ned will configure your document checklist and request flow accordingly.</div>
+
+    <div class="section">
+      <div class="section-title">Standard documents (check all that apply):</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Government-issued photo ID" /> Government-issued photo ID (all owners above <input type="text" name="docs_id_threshold" style="display:inline-block;width:60px;margin:0 4px;" placeholder="%" />% ownership threshold)</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Business registration / articles of incorporation / operating agreement" /> Business registration / articles of incorporation / operating agreement</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="EIN verification letter (IRS CP575 or equivalent)" /> EIN verification letter (IRS CP575 or equivalent)</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Voided check or bank letter (for ACH setup)" /> Voided check or bank letter (for ACH setup)</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Business bank account statements" /> Business bank account statements — <input type="text" name="docs_bank_months" style="display:inline-block;width:60px;margin:0 4px;" /> months (Note: Plaid connection replaces statements for connected accounts)</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Business tax returns" /> Business tax returns — <input type="text" name="docs_biz_tax_years" style="display:inline-block;width:60px;margin:0 4px;" /> years</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Personal tax returns" /> Personal tax returns — <input type="text" name="docs_personal_tax_years" style="display:inline-block;width:60px;margin:0 4px;" /> years</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Personal financial statement" /> Personal financial statement</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Business plan or use-of-funds narrative" /> Business plan or use-of-funds narrative</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Signed loan application" /> Signed loan application</label>
+        <label class="check-item"><input type="checkbox" name="docs_standard" value="Signed borrower certification / self-attestation form" /> Signed borrower certification / self-attestation form</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Loan-product-specific documents — are there any additional documents unique to this loan product? (add any below, or N/A)</div>
+      <table class="form-table">
+        <thead><tr><th>Document Name</th><th style="width:160px;">Required or Optional?</th><th style="width:220px;">Collected at: Application / Approval / Closing</th></tr></thead>
+        <tbody>
+          <tr><td><input type="text" name="doc_custom_1" /></td><td><select name="doc_custom_1_req"><option value="">Select…</option><option>Required</option><option>Optional</option></select></td><td><select name="doc_custom_1_when"><option value="">Select…</option><option>Application</option><option>Approval</option><option>Closing</option></select></td></tr>
+          <tr><td><input type="text" name="doc_custom_2" /></td><td><select name="doc_custom_2_req"><option value="">Select…</option><option>Required</option><option>Optional</option></select></td><td><select name="doc_custom_2_when"><option value="">Select…</option><option>Application</option><option>Approval</option><option>Closing</option></select></td></tr>
+          <tr><td><input type="text" name="doc_custom_3" /></td><td><select name="doc_custom_3_req"><option value="">Select…</option><option>Required</option><option>Optional</option></select></td><td><select name="doc_custom_3_when"><option value="">Select…</option><option>Application</option><option>Approval</option><option>Closing</option></select></td></tr>
+          <tr><td><input type="text" name="doc_custom_4" /></td><td><select name="doc_custom_4_req"><option value="">Select…</option><option>Required</option><option>Optional</option></select></td><td><select name="doc_custom_4_when"><option value="">Select…</option><option>Application</option><option>Approval</option><option>Closing</option></select></td></tr>
+        </tbody>
+      </table>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Open Field — Please add any other document types required which might not be listed.</label>
+        <textarea name="docs_other"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 18 — Part 5: Credit Policy
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-18">
+    <div class="step-title">PART 5 — CREDIT POLICY</div>
+    <div class="step-desc">This section captures how your organization handles borrower performance after the loan is made. Ned uses these definitions to configure monitoring alerts, repayment tracking, and reporting. Answer based on your current policies, or indicate N/A if you don't have a formal policy yet.</div>
+
+    <div class="section">
+      <div class="section-title">5A — Delinquency &amp; Default</div>
+
+      <div class="field field-mb">
+        <label class="field-label">5A.1 &nbsp; How do you define delinquency — at how many days past due does a payment become delinquent? (or N/A)</label>
+        <div class="field-hint" style="margin-bottom:6px;">A payment is considered delinquent when it is ___ or more days past due</div>
+        <input type="text" name="delinquent_days" placeholder="e.g. 15" style="max-width:160px;" />
+        <div class="field-hint" style="margin-top:4px;">(Common thresholds: 1 day, 5 days, 15 days, 30 days)</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">5A.2 &nbsp; How do you define default? (check all that apply, or N/A)</div>
+      <div class="check-group col-1 field-mb">
+        <label class="check-item"><input type="checkbox" name="default_def" value="Payment is days past due" /> Payment is <input type="text" name="default_days" placeholder="e.g. 90" style="display:inline-block;width:80px;margin:0 6px;" /> or more days past due</label>
+        <label class="check-item"><input type="checkbox" name="default_def" value="Consecutive missed payments" /> <input type="text" name="default_missed" placeholder="e.g. 3" style="display:inline-block;width:60px;margin-right:6px;" /> or more consecutive missed payments</label>
+        <label class="check-item"><input type="checkbox" name="default_def" value="Borrower becomes insolvent or files for bankruptcy" /> Borrower becomes insolvent or files for bankruptcy</label>
+        <label class="check-item"><input type="checkbox" name="default_def" value="Borrower violates material loan covenant" /> Borrower violates material loan covenant</label>
+        <label class="check-item"><input type="checkbox" name="default_def" value="Other" /> Other: <input type="text" name="default_other" style="display:inline-block;width:220px;margin-left:8px;" /></label>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">5A.3 &nbsp; How do you categorize past-due accounts — what are your aging buckets? (or N/A if no formal buckets)</div>
+      <table class="form-table field-mb">
+        <thead><tr><th style="width:200px;">Bucket</th><th>Days Past Due</th></tr></thead>
+        <tbody>
+          <tr><td>Current</td><td>0 days</td></tr>
+          <tr><td>Early delinquency</td><td>1 – <input type="text" name="bucket_early_end" style="width:60px;display:inline-block;" /> days</td></tr>
+          <tr><td>Delinquent</td><td><input type="text" name="bucket_del_start" style="width:60px;display:inline-block;" /> – <input type="text" name="bucket_del_end" style="width:60px;display:inline-block;" /> days</td></tr>
+          <tr><td>Seriously delinquent</td><td><input type="text" name="bucket_serious_start" style="width:60px;display:inline-block;" /> – <input type="text" name="bucket_serious_end" style="width:60px;display:inline-block;" /> days</td></tr>
+          <tr><td>Default / charge-off eligible</td><td><input type="text" name="bucket_default_start" style="width:60px;display:inline-block;" /> + days</td></tr>
+        </tbody>
+      </table>
+
+      <div class="field field-mb">
+        <label class="field-label">5A.4 &nbsp; What is your charge-off policy — at how many days past due do you charge off a loan? (or N/A)</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;color:#333;">
+          Loans are charged off after <input type="text" name="chargeoff_days" style="width:80px;" /> days past due, OR
+        </div>
+        <label class="check-item"><input type="checkbox" name="chargeoff_casebycasey" value="Charge-off is case-by-case / determined by credit committee" /> Charge-off is case-by-case / determined by credit committee</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">5B — Collections &amp; Loss Mitigation</div>
+
+      <div class="field-label" style="color:#333;font-size:13px;margin-bottom:8px;">5B.1 &nbsp; When a payment is first missed, what is your standard response process? (or N/A)</div>
+      <div class="field-hint" style="margin-bottom:8px;">(e.g., automated reminder at Day 1, outreach call at Day 5, formal notice at Day 15)</div>
+      <table class="form-table field-mb">
+        <thead><tr><th style="width:200px;">Trigger</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Day <input type="text" name="coll_day_1" style="width:50px;display:inline-block;" />: First missed payment</td><td><input type="text" name="coll_action_1" /></td></tr>
+          <tr><td>Day <input type="text" name="coll_day_2" style="width:50px;display:inline-block;" />:</td><td><input type="text" name="coll_action_2" /></td></tr>
+          <tr><td>Day <input type="text" name="coll_day_3" style="width:50px;display:inline-block;" />:</td><td><input type="text" name="coll_action_3" /></td></tr>
+          <tr><td>Day <input type="text" name="coll_day_4" style="width:50px;display:inline-block;" />: Formal default notice</td><td><input type="text" name="coll_action_4" /></td></tr>
+        </tbody>
+      </table>
+
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">5B.2 &nbsp; Do you offer loan modifications, deferments, or workout arrangements? (or N/A)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="modifications" value="Yes" /> Yes — describe triggers and process: <textarea name="modifications_desc" style="margin-top:6px;min-height:56px;"></textarea></label>
+          <label class="check-item"><input type="radio" name="modifications" value="No" /> No</label>
+          <label class="check-item"><input type="radio" name="modifications" value="Case-by-case" /> Case-by-case</label>
+        </div>
+      </div>
+
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">5B.3 &nbsp; Do you use a third-party collections agency? (or N/A)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="collections_agency" value="Yes" /> Yes — at what stage? <input type="text" name="collections_agency_stage" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+          <label class="check-item"><input type="radio" name="collections_agency" value="No" /> No</label>
+        </div>
+      </div>
+
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">5B.4 &nbsp; What is your late fee policy? (or N/A)</div>
+        <div class="check-group col-1">
+          <label class="check-item">
+            <input type="radio" name="late_fee" value="Late fee applies" />
+            Late fee applies: $<input type="text" name="late_fee_amt" style="display:inline-block;width:80px;margin:0 4px;" /> or <input type="text" name="late_fee_pct" style="display:inline-block;width:60px;margin:0 4px;" />% of payment, after <input type="text" name="late_fee_days" style="display:inline-block;width:60px;margin:0 4px;" /> days
+          </label>
+          <label class="check-item"><input type="radio" name="late_fee" value="No late fees" /> No late fees</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">5C — Early Repayment</div>
+
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">5C.1 &nbsp; May borrowers repay early? If so, is there a penalty?</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="early_repay" value="Yes, with no penalty" /> Yes, with no penalty</label>
+          <label class="check-item"><input type="radio" name="early_repay" value="Yes, with a prepayment penalty" /> Yes, with a prepayment penalty — describe: <input type="text" name="early_repay_penalty_desc" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+          <label class="check-item"><input type="radio" name="early_repay" value="No early repayment permitted" /> No early repayment permitted</label>
+        </div>
+      </div>
+
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:8px;">5C.2 &nbsp; For revenue-based loans: is there a buyout option — a fixed payoff amount before the full repayment period? (or N/A)</div>
+        <div class="check-group col-1">
+          <label class="check-item"><input type="radio" name="buyout" value="Yes" /> Yes — buyout terms: <input type="text" name="buyout_terms" style="display:inline-block;width:200px;margin-left:8px;" /></label>
+          <label class="check-item"><input type="radio" name="buyout" value="No" /> No</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 19 — Part 6: Legal Documents & Templates
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-19">
+    <div class="step-title">PART 6 — LEGAL DOCUMENTS &amp; TEMPLATES</div>
+    <div class="step-desc">Ned integrates with Dropbox Sign for e-signature and closing. What legal documents do your borrowers sign at each stage? If you have existing templates, we'll format them for the platform.</div>
+
+    <div class="section">
+      <div class="section-title">6A — Application Stage Documents</div>
+      <table class="doc-table">
+        <thead><tr><th>Document</th><th style="width:140px;">Have existing template?</th><th style="width:140px;">Need Ned/legal help?</th></tr></thead>
+        <tbody>
+          <tr><td>Borrower authorization / consent to pull bank data</td><td><div class="yn"><label><input type="radio" name="doc_auth_have" value="Y" />Y</label><label><input type="radio" name="doc_auth_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_auth_need" value="Y" />Y</label><label><input type="radio" name="doc_auth_need" value="N" />N</label></div></td></tr>
+          <tr><td>Privacy notice</td><td><div class="yn"><label><input type="radio" name="doc_privacy_have" value="Y" />Y</label><label><input type="radio" name="doc_privacy_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_privacy_need" value="Y" />Y</label><label><input type="radio" name="doc_privacy_need" value="N" />N</label></div></td></tr>
+          <tr><td>Application certification (borrower attests info is accurate)</td><td><div class="yn"><label><input type="radio" name="doc_app_cert_have" value="Y" />Y</label><label><input type="radio" name="doc_app_cert_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_app_cert_need" value="Y" />Y</label><label><input type="radio" name="doc_app_cert_need" value="N" />N</label></div></td></tr>
+          <tr><td>Other: <input type="text" name="doc_6a_other" style="width:200px;" /></td><td><div class="yn"><label><input type="radio" name="doc_6a_other_have" value="Y" />Y</label><label><input type="radio" name="doc_6a_other_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_6a_other_need" value="Y" />Y</label><label><input type="radio" name="doc_6a_other_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">6B — Approval / Commitment Stage Documents</div>
+      <table class="doc-table">
+        <thead><tr><th>Document</th><th style="width:140px;">Have existing template?</th><th style="width:140px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan commitment letter / term sheet</td><td><div class="yn"><label><input type="radio" name="doc_commit_have" value="Y" />Y</label><label><input type="radio" name="doc_commit_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_commit_need" value="Y" />Y</label><label><input type="radio" name="doc_commit_need" value="N" />N</label></div></td></tr>
+          <tr><td>Adverse action notice (for declines)</td><td><div class="yn"><label><input type="radio" name="doc_adverse_have" value="Y" />Y</label><label><input type="radio" name="doc_adverse_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_adverse_need" value="Y" />Y</label><label><input type="radio" name="doc_adverse_need" value="N" />N</label></div></td></tr>
+          <tr><td>Other: <input type="text" name="doc_6b_other" style="width:200px;" /></td><td><div class="yn"><label><input type="radio" name="doc_6b_other_have" value="Y" />Y</label><label><input type="radio" name="doc_6b_other_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_6b_other_need" value="Y" />Y</label><label><input type="radio" name="doc_6b_other_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">6C — Closing / Disbursement Documents</div>
+      <table class="doc-table">
+        <thead><tr><th>Document</th><th style="width:140px;">Have existing template?</th><th style="width:140px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan agreement / promissory note</td><td><div class="yn"><label><input type="radio" name="doc_note_have" value="Y" />Y</label><label><input type="radio" name="doc_note_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_note_need" value="Y" />Y</label><label><input type="radio" name="doc_note_need" value="N" />N</label></div></td></tr>
+          <tr><td>ACH authorization / debit authorization</td><td><div class="yn"><label><input type="radio" name="doc_ach_have" value="Y" />Y</label><label><input type="radio" name="doc_ach_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_ach_need" value="Y" />Y</label><label><input type="radio" name="doc_ach_need" value="N" />N</label></div></td></tr>
+          <tr><td>Personal guarantee (if required)</td><td><div class="yn"><label><input type="radio" name="doc_guarantee_have" value="Y" />Y</label><label><input type="radio" name="doc_guarantee_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_guarantee_need" value="Y" />Y</label><label><input type="radio" name="doc_guarantee_need" value="N" />N</label></div></td></tr>
+          <tr><td>Security agreement / UCC filing authorization (if required)</td><td><div class="yn"><label><input type="radio" name="doc_ucc_have" value="Y" />Y</label><label><input type="radio" name="doc_ucc_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_ucc_need" value="Y" />Y</label><label><input type="radio" name="doc_ucc_need" value="N" />N</label></div></td></tr>
+          <tr><td>Revenue share agreement (for RBF products)</td><td><div class="yn"><label><input type="radio" name="doc_rev_share_have" value="Y" />Y</label><label><input type="radio" name="doc_rev_share_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_rev_share_need" value="Y" />Y</label><label><input type="radio" name="doc_rev_share_need" value="N" />N</label></div></td></tr>
+          <tr><td>State-specific disclosure forms</td><td><div class="yn"><label><input type="radio" name="doc_state_have" value="Y" />Y</label><label><input type="radio" name="doc_state_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_state_need" value="Y" />Y</label><label><input type="radio" name="doc_state_need" value="N" />N</label></div></td></tr>
+          <tr><td>Other: <input type="text" name="doc_6c_other" style="width:200px;" /></td><td><div class="yn"><label><input type="radio" name="doc_6c_other_have" value="Y" />Y</label><label><input type="radio" name="doc_6c_other_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_6c_other_need" value="Y" />Y</label><label><input type="radio" name="doc_6c_other_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">6D — Servicing / Ongoing Documents</div>
+      <table class="doc-table">
+        <thead><tr><th>Document</th><th style="width:140px;">Have existing template?</th><th style="width:140px;">Need help?</th></tr></thead>
+        <tbody>
+          <tr><td>Loan modification / deferment agreement</td><td><div class="yn"><label><input type="radio" name="doc_mod_have" value="Y" />Y</label><label><input type="radio" name="doc_mod_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_mod_need" value="Y" />Y</label><label><input type="radio" name="doc_mod_need" value="N" />N</label></div></td></tr>
+          <tr><td>Default / acceleration notice</td><td><div class="yn"><label><input type="radio" name="doc_default_have" value="Y" />Y</label><label><input type="radio" name="doc_default_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_default_need" value="Y" />Y</label><label><input type="radio" name="doc_default_need" value="N" />N</label></div></td></tr>
+          <tr><td>Payoff letter template</td><td><div class="yn"><label><input type="radio" name="doc_payoff_have" value="Y" />Y</label><label><input type="radio" name="doc_payoff_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_payoff_need" value="Y" />Y</label><label><input type="radio" name="doc_payoff_need" value="N" />N</label></div></td></tr>
+          <tr><td>Annual borrower certification (if required)</td><td><div class="yn"><label><input type="radio" name="doc_annual_cert_have" value="Y" />Y</label><label><input type="radio" name="doc_annual_cert_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_annual_cert_need" value="Y" />Y</label><label><input type="radio" name="doc_annual_cert_need" value="N" />N</label></div></td></tr>
+          <tr><td>Other: <input type="text" name="doc_6d_other" style="width:200px;" /></td><td><div class="yn"><label><input type="radio" name="doc_6d_other_have" value="Y" />Y</label><label><input type="radio" name="doc_6d_other_have" value="N" />N</label></div></td><td><div class="yn"><label><input type="radio" name="doc_6d_other_need" value="Y" />Y</label><label><input type="radio" name="doc_6d_other_need" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">6E — State-Specific Compliance</div>
+      <div class="field field-mb">
+        <label class="field-label">6E.1 &nbsp; What state(s) do your borrowers primarily operate in?</label>
+        <input type="text" name="compliance_states" />
+      </div>
+      <div class="field">
+        <label class="field-label">6E.2 &nbsp; Are there state-specific lending licenses, disclosures, or usury limitations that apply to this loan product that we should be aware of? (or N/A)</label>
+        <textarea name="compliance_notes"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 20 — Part 7: Borrower Application Experience + Confirmation
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-20">
+    <div class="step-title">PART 7 — BORROWER APPLICATION EXPERIENCE</div>
+    <div class="step-desc">Ned builds a white-labeled borrower application portal under your brand. This section tells us how to configure what borrowers see.</div>
+
+    <div class="section">
+      <div class="section-title">7.1</div>
+      <div class="section-note">How should we brand the borrower portal for this loan product?</div>
+      <div class="field field-mb">
+        <label class="field-label">Your organization's name as borrowers will see it:</label>
+        <input type="text" name="brand_name" />
+      </div>
+      <div class="field field-mb">
+        <label class="field-label">Preferred subdomain (e.g., loans.yourorg.org or yourorg.nedhelps.com):</label>
+        <input type="text" name="subdomain" />
+      </div>
+      <div class="field-mb">
+        <div class="section-note" style="margin-bottom:6px;">Do you have brand guidelines / a logo to provide?</div>
+        <div class="yn">
+          <label><input type="radio" name="brand_logo" value="Yes — will attach" /> Yes — will attach</label>
+          <label><input type="radio" name="brand_logo" value="No" /> No</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">7.2</div>
+      <div class="section-note">What language(s) should the borrower-facing application be in?</div>
+      <div class="yn field-mb">
+        <label><input type="radio" name="language" value="English" /> English</label>
+        <label><input type="radio" name="language" value="Spanish" /> Spanish</label>
+        <label><input type="radio" name="language" value="Both" /> Both</label>
+        <label><input type="radio" name="language" value="Other" /> Other: <input type="text" name="language_other" style="display:inline-block;width:160px;margin-left:8px;" /></label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Custom application questions</div>
+      <div class="section-note">Beyond Ned's standard fields, are there questions you want to ask borrowers? List them below.</div>
+      <table class="form-table">
+        <thead><tr><th>Question</th><th style="width:200px;">Answer type (text / yes-no / multiple choice / number)</th><th style="width:80px;">Required?</th></tr></thead>
+        <tbody>
+          <tr><td><input type="text" name="app_q1" /></td><td><select name="app_q1_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></td><td><div class="yn"><label><input type="radio" name="app_q1_req" value="Y" />Y</label><label><input type="radio" name="app_q1_req" value="N" />N</label></div></td></tr>
+          <tr><td><input type="text" name="app_q2" /></td><td><select name="app_q2_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></td><td><div class="yn"><label><input type="radio" name="app_q2_req" value="Y" />Y</label><label><input type="radio" name="app_q2_req" value="N" />N</label></div></td></tr>
+          <tr><td><input type="text" name="app_q3" /></td><td><select name="app_q3_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></td><td><div class="yn"><label><input type="radio" name="app_q3_req" value="Y" />Y</label><label><input type="radio" name="app_q3_req" value="N" />N</label></div></td></tr>
+          <tr><td><input type="text" name="app_q4" /></td><td><select name="app_q4_type"><option value="">Select…</option><option>Text</option><option>Yes / No</option><option>Multiple choice</option><option>Number</option></select></td><td><div class="yn"><label><input type="radio" name="app_q4_req" value="Y" />Y</label><label><input type="radio" name="app_q4_req" value="N" />N</label></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">7.4</div>
+      <div class="section-note">Borrowers must connect their business bank account via Plaid as part of the application. Would you like help with borrower-facing language explaining this step?</div>
+      <div class="check-group col-1">
+        <label class="check-item"><input type="radio" name="plaid_language" value="Yes — please provide suggested language / FAQ for our borrowers" /> Yes — please provide suggested language / FAQ for our borrowers</label>
+        <label class="check-item"><input type="radio" name="plaid_language" value="No — we'll handle this ourselves" /> No — we'll handle this ourselves</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">CONFIRMATION</div>
+      <div class="section-note">By completing and returning this template, you are providing Ned with the information needed to configure your loan product(s) on the platform. Ned will share a configuration summary for your review and approval before any loan product goes live.</div>
+      <div class="row row-2 field-mb">
+        <div class="field"><label class="field-label">Loan product name:</label><input type="text" name="confirm_lp_name" /></div>
+        <div class="field"><label class="field-label">Date:</label><input type="text" name="confirm_date" /></div>
+      </div>
+      <div class="row row-2">
+        <div class="field"><label class="field-label">Completed by:</label><input type="text" name="completed_by" /></div>
+        <div class="field"><label class="field-label">Title:</label><input type="text" name="completed_by_title" /></div>
+      </div>
+    </div>
+
     <div class="nav">
       <button type="button" class="btn btn-back" onclick="prevStep()">← Back</button>
       <button type="submit" class="btn btn-submit">Submit →</button>
     </div>
   </div>
 
-  <!-- Navigation (shown on steps 1–8) -->
+  <!-- Navigation (shown on steps 1–19) -->
   <div class="nav" id="main-nav">
     <button type="button" class="btn btn-back" onclick="prevStep()" id="btn-back" style="visibility:hidden;">← Back</button>
     <button type="button" class="btn btn-next" onclick="nextStep()" id="btn-next">Next →</button>
@@ -591,7 +1692,7 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ─────────────────────────────────────────────────────────
 
-const TOTAL_STEPS = 9;
+const TOTAL_STEPS = 20;
 const STEP_NAMES = [
   "Welcome",
   "Section 1 — Your Organization",
@@ -601,7 +1702,18 @@ const STEP_NAMES = [
   "Section 2.6–2.7 — Operations",
   "Section 3 — Goals with Ned",
   "Section 4 — Loan Products",
-  "Sections 5 & 6 — Configuration & Readiness"
+  "Sections 5 & 6 — Configuration & Readiness",
+  "Loan Product Config — Part 1",
+  "Part 2 — Loan Mechanics",
+  "Part 3A — Revenue & Loan Size",
+  "Part 3B — Cash Flow & Financial Health",
+  "Part 3C–3D — Profitability & Business Eligibility",
+  "Part 3E–3F — Owner & Credit + Custom Criteria",
+  "Part 3G — Priority Matrix",
+  "Part 4 — Required Documents",
+  "Part 5 — Credit Policy",
+  "Part 6 — Legal Documents",
+  "Part 7 — Borrower Experience & Confirmation"
 ];
 
 let current = 1;
