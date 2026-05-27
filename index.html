@@ -283,7 +283,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 
     <div class="section">
       <div class="section-title">2.4</div>
-      <div class="section-note">Describe your lending team structure — Do you have a dedicated person/team? </div>
+      <div class="section-note">Describe your lending team structure:</div>
       <table class="form-table">
         <thead>
           <tr>
@@ -294,7 +294,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
         </thead>
         <tbody>
           <tr>
-            <td>Loan origination / intake </td>
+            <td>Loan origination / intake — Do you have a dedicated person/team?</td>
             <td><div class="yn"><label><input type="radio" name="team_origination" value="Y" /> Y</label><label><input type="radio" name="team_origination" value="N" /> N</label></div></td>
             <td><input type="text" name="team_origination_notes" /></td>
           </tr>
@@ -1835,7 +1835,92 @@ document.getElementById('intake-form').addEventListener('submit', async function
   }
 });
 
-showStep(1);
+// ── Auto-save / restore ───────────────────────────────────
+const SAVE_KEY = 'ned_intake_draft';
+
+function saveProgress() {
+  const form = document.getElementById('intake-form');
+  const data = {};
+  form.querySelectorAll('input, select, textarea').forEach(el => {
+    if (!el.name) return;
+    if (el.type === 'checkbox') {
+      if (!data[el.name]) data[el.name] = [];
+      if (el.checked) data[el.name].push(el.value);
+    } else if (el.type === 'radio') {
+      if (el.checked) data[el.name] = el.value;
+    } else {
+      data[el.name] = el.value;
+    }
+  });
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ step: current, fields: data }));
+}
+
+function restoreProgress(saved) {
+  const form = document.getElementById('intake-form');
+  const { fields } = saved;
+  Object.entries(fields).forEach(([name, val]) => {
+    const els = form.querySelectorAll(`[name="${name}"]`);
+    els.forEach(el => {
+      if (el.type === 'checkbox') {
+        el.checked = Array.isArray(val) ? val.includes(el.value) : val === el.value;
+      } else if (el.type === 'radio') {
+        el.checked = el.value === val;
+      } else {
+        el.value = val || '';
+      }
+    });
+  });
+  // Re-run conditional display
+  toggleProductSections();
+}
+
+// Listen for any field change and auto-save
+document.getElementById('intake-form').addEventListener('input', saveProgress);
+document.getElementById('intake-form').addEventListener('change', saveProgress);
+
+// On page load, check for saved draft
+(function() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { showStep(1); return; }
+  let saved;
+  try { saved = JSON.parse(raw); } catch(e) { showStep(1); return; }
+  if (!saved || !saved.step || saved.step <= 1) { showStep(1); return; }
+
+  // Show a resume banner
+  const banner = document.createElement('div');
+  banner.id = 'resume-banner';
+  banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:14px 22px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:16px;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.2);';
+  banner.innerHTML = `<span>You have a saved draft — pick up on <strong>Step ${saved.step} of ${TOTAL_STEPS}</strong>?</span>
+    <button onclick="resumeDraft()" style="background:#fff;color:#1a1a1a;border:none;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;">Resume</button>
+    <button onclick="discardDraft()" style="background:transparent;color:#aaa;border:none;font-size:12px;cursor:pointer;">Start over</button>`;
+  document.body.appendChild(banner);
+  showStep(1);
+})();
+
+function resumeDraft() {
+  const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+  restoreProgress(saved);
+  current = saved.step;
+  showStep(current);
+  document.getElementById('resume-banner')?.remove();
+}
+
+function discardDraft() {
+  localStorage.removeItem(SAVE_KEY);
+  document.getElementById('resume-banner')?.remove();
+  showStep(1);
+}
+
+// Also save whenever the step changes
+const _origNext = nextStep;
+nextStep = function() { _origNext(); saveProgress(); };
+const _origPrev = prevStep;
+prevStep = function() { _origPrev(); saveProgress(); };
+
+// Clear saved draft on successful submit
+document.getElementById('intake-form').addEventListener('submit', function clearDraft() {
+  localStorage.removeItem(SAVE_KEY);
+}, true);
 </script>
 </body>
 </html>
