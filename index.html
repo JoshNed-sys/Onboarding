@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Ned — Customer Intake</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f4f0; padding: 32px 20px 80px; }
@@ -133,7 +134,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:11%"></div></div>
   </div>
 
-  <form id="intake-form" action="https://formspree.io/f/mqejgbqz" method="POST">
+  <form id="intake-form">
 
   <!-- ══════════════════════════════════════════════════
        STEP 1 — Organization + Track
@@ -1131,6 +1132,7 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
     <div id="thanks">
       <h2>Thanks for submitting!</h2>
       <p>Camille will confirm receipt and follow up within 2 business days.<br />Total time from completed intake to go-live: typically 3–6 weeks for full implementation, 1–2 weeks for Spotlight.</p>
+      <p style="margin-top:16px;font-size:13px;color:#888;">We also sent a link to your email — click it any time to check your onboarding status.</p>
     </div>
   </div>
 
@@ -1144,6 +1146,13 @@ select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns
 </div>
 
 <script>
+// ── Supabase config ───────────────────────────────────────
+const SUPABASE_URL  = 'https://zuxxlbwicobgqsxbzirm.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1eHhsYndpY29iZ3FzeGJ6aXJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzE2ODgsImV4cCI6MjA5NTQ0NzY4OH0.9ZTU-qKbiQAqGz2EcS71jX7xN7fbrI8nea7HFuEzoN0';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+// ─────────────────────────────────────────────────────────
+
 const TOTAL_STEPS = 9;
 const STEP_NAMES = [
   "Your Organization",
@@ -1197,20 +1206,53 @@ function setTrack(track) {
   document.querySelectorAll('.track-b-only').forEach(el => el.style.display = track === 'b' ? 'block' : 'none');
 }
 
-// Handle form submission
-document.getElementById('intake-form').addEventListener('submit', function(e) {
+// Handle form submission → Supabase
+document.getElementById('intake-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  fetch(this.action, {
-    method: 'POST',
-    body: new FormData(this),
-    headers: { 'Accept': 'application/json' }
-  }).then(r => {
-    if (r.ok) {
-      document.getElementById('intake-form').style.display = 'none';
-      document.querySelector('.progress-wrap').style.display = 'none';
-      document.getElementById('thanks').style.display = 'block';
+  const submitBtn = this.querySelector('.btn-submit');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
+
+  // Collect all form fields (handle multi-value checkboxes)
+  const raw = {};
+  const formData = new FormData(this);
+  for (let [key, val] of formData.entries()) {
+    if (raw[key] !== undefined) {
+      raw[key] = [].concat(raw[key], val);
+    } else {
+      raw[key] = val;
     }
-  }).catch(() => alert('Something went wrong. Please email camille@nedhelps.com directly.'));
+  }
+
+  try {
+    // Insert submission into Supabase
+    const { error } = await db.from('intake_submissions').insert({
+      org_name:     raw.org_name     || '',
+      track:        raw.track        || '',
+      contact_name: raw.contact_name || '',
+      email:        raw.email        || '',
+      phone:        raw.phone        || '',
+      ein:          raw.ein          || '',
+      location:     raw.location     || '',
+      status:       'New',
+      form_data:    raw
+    });
+    if (error) throw error;
+
+    // Send magic link so client can check their status
+    if (raw.email) {
+      await db.auth.signInWithOtp({
+        email: raw.email,
+        options: { emailRedirectTo: 'https://joshned-sys.github.io/portal.html' }
+      });
+    }
+
+    document.getElementById('intake-form').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('thanks').style.display = 'block';
+  } catch(err) {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit intake →'; }
+    alert('Something went wrong (' + (err.message || err) + '). Please email camille@nedhelps.com directly.');
+  }
 });
 
 showStep(1);
